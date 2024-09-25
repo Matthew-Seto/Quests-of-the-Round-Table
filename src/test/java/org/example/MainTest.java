@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
-
     @Test
     @DisplayName("Check Adventure deck size is 100")
     void RESP_01_test_01(){
