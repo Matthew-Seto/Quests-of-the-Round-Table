@@ -2,6 +2,8 @@ package org.example;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainTest {
@@ -23,4 +25,17 @@ class MainTest {
         assertEquals(17, eventDeckSize);
     }
 
+    @Test
+    @DisplayName("Distribute 12 cards to from the adventure deck to each player")
+    void RESP_02_test_01(){
+        Game game = new Game(4);
+        game.distributeCards();
+
+        for (Player player : game.getPlayers()) {
+            assertEquals(12, player.getHandSize());
+        }
+
+        int expectedDeckSize = 100 - (4 * 12);
+        assertEquals(expectedDeckSize, game.getAdventureDeck().getAdventureDeckSize());
+    }
 }

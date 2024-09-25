@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deck {
-    static class Card {
+    public static class Card {
         String type;
         int value;
         String description;
