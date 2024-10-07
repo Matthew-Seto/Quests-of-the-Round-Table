@@ -88,7 +88,9 @@ public class Game {
     }
 
     public void drawAdventureCardsForAllPlayers(int numberOfCards) {
-
+        for (Player player : players) {
+            drawAdventureCardsForPlayer(player, numberOfCards);
+        }
     }
 
     private void returnEventCardToBottom(Deck.Card card) {
