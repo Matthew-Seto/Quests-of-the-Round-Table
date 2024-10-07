@@ -14,7 +14,7 @@ public class Game {
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
         for (int i = 1; i <= numberOfPlayers; i++) {
-            players.add(new Player("P" + i)); // Create players P1, P2, P3, ...
+            players.add(new Player("P" + i,this)); // Create players P1, P2, P3, ...
         }
         this.advDeck = new Deck();
         this.eventDeck = new Deck();
@@ -71,6 +71,13 @@ public class Game {
         }
     }
 
+    public Deck.Card drawAdventureCard() {
+        return null;
+    }
+
+    public void drawAdventureCardsForPlayer(Player player, int numberOfCards) {
+
+    }
     private void returnEventCardToBottom(Deck.Card card) {
         eventDeck.eventDeck.add(card);
     }

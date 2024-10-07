@@ -148,4 +148,26 @@ class MainTest {
         assertEquals(2, currentPlayer.getShields(), "Player should have 2 shields after drawing Plague card");
     }
 
+    @Test
+    @DisplayName("Current Player draws Queen's Favour Event Card")
+    void RESP_07_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+        Player currentPlayer = game.getCurrentPlayer();
+        // Use some cards so Queens' favour will work without trimming, later tests will test trimming hand
+        currentPlayer.playAdventureCard(0);
+        currentPlayer.playAdventureCard(0);
+        currentPlayer.playAdventureCard(0);
+
+        game.overwriteEventDeckCard(0, "E", "Queen's favor: The player who draws this card immediately draws 2 adventure cards.");
+
+        game.gameStart(printWriter);
+        System.out.println(output.toString());
+
+        // Verify the player received 2 additional adventure cards
+        assertEquals(11, currentPlayer.getHandSize());
+    }
 }

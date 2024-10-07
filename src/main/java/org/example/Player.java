@@ -7,11 +7,13 @@ public class Player {
     private final String name;
     private ArrayList<Deck.Card> hand = new ArrayList<>();
     private int shields;
+    private final Game game;
 
-    public Player(String name) {
+    public Player(String name, Game game) {
         this.name = name;
         this.hand = new ArrayList<>();
         this.shields = 0;
+        this.game = game;
     }
 
     public void receiveCard(Deck.Card card) {
@@ -22,6 +24,10 @@ public class Player {
         if (Objects.equals(card.description, "Plague: The player who draws this card immediately loses 2 shields.")) {
             loseShields(2);
         }
+    }
+
+    public void playAdventureCard(int index){
+
     }
 
     public void loseShields(int amount) {
