@@ -34,15 +34,26 @@ public class Game {
     }
 
     public void promptPlayer(Scanner input, PrintWriter output) {
+        output.println("Make your move (to end turn hit <return>): ");
+        output.flush(); // Flush output to ensure it’s printed immediately
 
+        String inputStr = input.nextLine();
+        if (inputStr.isEmpty()) {
+            endCurrentPlayerTurn(output);
+        }
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
-
+        output.println("Player " + getCurrentPlayer().getName() + "'s turn has ended.");
+        flushDisplay(output);
+        nextTurn(output);
     }
 
     public void flushDisplay(PrintWriter output) {
-
+        for (int i = 0; i < 8; i++) {
+            output.println();
+        }
+        output.flush();
     }
 
     public void gameStart(PrintWriter output) {
