@@ -36,15 +36,23 @@ public class Game {
     }
 
     public void displayCurrentPlayerHand(PrintWriter output) {
-
+        Player currentPlayer = players.get(currentPlayerIndex);
+        output.println(currentPlayer.getName() + "'s turn");
+        output.println(currentPlayer.getName() + "'s hand:");
+        for (Deck.Card card : currentPlayer.getHand()) {
+            output.print(card + " ");
+        }
+        output.println();
     }
 
     public void nextTurn(PrintWriter output) {
-
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        displayCurrentPlayerHand(output);
     }
 
+
     public Player getCurrentPlayer(){
-        return new Player("Test");
+        return players.get(currentPlayerIndex);
     };
 
     public Deck getAdventureDeck() {

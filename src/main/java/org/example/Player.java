@@ -19,4 +19,8 @@ public class Player {
     }
 
     public String getName(){return name;}
+
+    public ArrayList<Deck.Card> getHand() {
+        return hand;
+    }
 }

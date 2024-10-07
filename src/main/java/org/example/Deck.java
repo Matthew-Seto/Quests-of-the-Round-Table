@@ -20,7 +20,11 @@ public class Deck {
         }
 
         public String toString() {
-            return "";
+            if (description != null) {
+                return type + ": " + description;
+            } else {
+                return type + "" + value;
+            }
         }
     }
 
