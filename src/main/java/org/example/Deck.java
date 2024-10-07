@@ -18,6 +18,10 @@ public class Deck {
             this.type = type;
             this.description = description;
         }
+
+        public String toString() {
+            return "";
+        }
     }
 
     ArrayList<Card> adventureDeck = new ArrayList<>();

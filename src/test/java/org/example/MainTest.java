@@ -2,6 +2,8 @@ package org.example;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,5 +39,92 @@ class MainTest {
 
         int expectedDeckSize = 100 - (4 * 12);
         assertEquals(expectedDeckSize, game.getAdventureDeck().getAdventureDeckSize());
+    }
+
+    //RESP_05 Test's will clump together each players hand this is just to test that turns are working in the correct order
+    @Test
+    @DisplayName("Test that P2 plays after P1")
+    void RESP_05_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        game.gameStart(printWriter);
+        printWriter.flush();
+        System.out.println(output.toString());
+        assertEquals("P1", game.getCurrentPlayer().getName());
+
+        game.nextTurn(printWriter);
+        printWriter.flush();
+        System.out.println(output.toString());
+        assertEquals("P2", game.getCurrentPlayer().getName());
+    }
+
+    @Test
+    @DisplayName("Test that P3 plays after P2")
+    void RESP_05_test_02() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        game.gameStart(printWriter);
+        System.out.println(output.toString());
+        game.nextTurn(printWriter); // P2's turn
+        System.out.println(output.toString());
+        assertEquals("P2", game.getCurrentPlayer().getName());
+
+        game.nextTurn(printWriter);
+        System.out.println(output.toString());
+        assertEquals("P3", game.getCurrentPlayer().getName());
+    }
+
+    @Test
+    @DisplayName("Test that P4 plays after P3")
+    void RESP_05_test_03() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        game.gameStart(printWriter);
+        System.out.println(output.toString());
+        game.nextTurn(printWriter); // P2's turn
+        System.out.println(output.toString());
+        game.nextTurn(printWriter); // P3's turn
+        System.out.println(output.toString());
+        assertEquals("P3", game.getCurrentPlayer().getName());
+
+        game.nextTurn(printWriter);
+        System.out.println(output.toString());
+        assertEquals("P4", game.getCurrentPlayer().getName());
+    }
+
+    @Test
+    @DisplayName("Test that P1 plays after P4")
+    void RESP_05_test_04() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        game.gameStart(printWriter);
+        System.out.println(output.toString());
+        game.nextTurn(printWriter); // P2's turn
+        System.out.println(output.toString());
+        game.nextTurn(printWriter); // P3's turn
+        System.out.println(output.toString());
+        game.nextTurn(printWriter); // P4's turn
+        System.out.println(output.toString());
+        assertEquals("P4", game.getCurrentPlayer().getName());
+
+        game.nextTurn(printWriter);
+        System.out.println(output.toString());
+        assertEquals("P1", game.getCurrentPlayer().getName());
     }
 }

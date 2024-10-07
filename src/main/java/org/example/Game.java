@@ -1,10 +1,13 @@
 package org.example;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game {
     private final Deck advDeck;
     private final ArrayList<Player> players;
+    private int currentPlayerIndex;
 
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
@@ -15,6 +18,7 @@ public class Game {
         Deck eventDeck = new Deck();
         this.advDeck.initializeAdventureDeck();
         eventDeck.initializeEventDeck();
+        this.currentPlayerIndex = 0;
     }
 
     public void distributeCards() {
@@ -26,6 +30,22 @@ public class Game {
             }
         }
     }
+
+    public void gameStart(PrintWriter output) {
+        displayCurrentPlayerHand(output);
+    }
+
+    public void displayCurrentPlayerHand(PrintWriter output) {
+
+    }
+
+    public void nextTurn(PrintWriter output) {
+
+    }
+
+    public Player getCurrentPlayer(){
+        return new Player("Test");
+    };
 
     public Deck getAdventureDeck() {
         return advDeck;
