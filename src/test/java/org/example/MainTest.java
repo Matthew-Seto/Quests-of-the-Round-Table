@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -196,5 +197,29 @@ class MainTest {
         for (Player player : game.getPlayers()){
             assertEquals(11, player.getHandSize());
         }
+    }
+
+    @Test
+    @DisplayName("Tests turn ending")
+    void RESP_09_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("Player P1's turn has ended."));
+        assertTrue(outputContent.contains("P2's turn"));
     }
 }

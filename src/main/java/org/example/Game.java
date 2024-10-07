@@ -33,6 +33,18 @@ public class Game {
         }
     }
 
+    public void promptPlayer(Scanner input, PrintWriter output) {
+
+    }
+
+    public void endCurrentPlayerTurn(PrintWriter output) {
+
+    }
+
+    public void flushDisplay(PrintWriter output) {
+
+    }
+
     public void gameStart(PrintWriter output) {
         displayCurrentPlayerHand(output);
         drawEventCard(getCurrentPlayer(), output);
@@ -75,7 +87,7 @@ public class Game {
         if (advDeck.getAdventureDeckSize() > 0) {
             return advDeck.adventureDeck.removeFirst();
         }
-        return null; // Or handle this scenario appropriately
+        return null;
     }
 
     public void drawAdventureCardsForPlayer(Player player, int numberOfCards) {
