@@ -89,6 +89,10 @@ public class Deck {
         Collections.shuffle(eventDeck);
     }
 
+    public void setEventCard(int index, Card c){
+        eventDeck.set(index,c);
+    }
+
     public int getAdventureDeckSize() {
         return adventureDeck.size();
     }

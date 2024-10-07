@@ -19,15 +19,18 @@ public class Player {
     }
 
     public void receiveEventCard(Deck.Card card) {
-
+        if (Objects.equals(card.description, "Plague: The player who draws this card immediately loses 2 shields.")) {
+            loseShields(2);
+        }
     }
 
     public void loseShields(int amount) {
-
+        shields -= amount;
+        if (shields < 0) shields = 0;
     }
 
     public void addShields(int amount){
-
+        shields += amount;
     }
 
     public int getShields() {

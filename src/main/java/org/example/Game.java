@@ -35,6 +35,7 @@ public class Game {
 
     public void gameStart(PrintWriter output) {
         displayCurrentPlayerHand(output);
+        drawEventCard(getCurrentPlayer(), output);
     }
 
     public void displayCurrentPlayerHand(PrintWriter output) {
@@ -54,19 +55,28 @@ public class Game {
     }
 
     public void overwriteEventDeckCard(int index, String type, String description){
-
+        Deck.Card e = new Deck.Card(type, description);
+        eventDeck.setEventCard(index,e);
     }
 
     private void drawEventCard(Player player, PrintWriter output) {
+        if (eventDeck.getEventDeckSize() > 0) {
+            Deck.Card drawnCard = eventDeck.eventDeck.removeFirst();
+            player.receiveEventCard(drawnCard);
+            output.println(player.getName() + " drew an event card: " + drawnCard);
 
+            returnEventCardToBottom(drawnCard);
+        } else {
+            output.println("No more event cards to draw.");
+        }
     }
 
     private void returnEventCardToBottom(Deck.Card card) {
-
+        eventDeck.eventDeck.add(card);
     }
 
     void givePlayerShields(Player player, int shields){
-
+        player.addShields(shields);
     }
 
     public Player getCurrentPlayer(){
