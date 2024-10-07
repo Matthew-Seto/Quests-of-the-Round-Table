@@ -72,11 +72,19 @@ public class Game {
     }
 
     public Deck.Card drawAdventureCard() {
-        return null;
+        if (advDeck.getAdventureDeckSize() > 0) {
+            return advDeck.adventureDeck.removeFirst();
+        }
+        return null; // Or handle this scenario appropriately
     }
 
     public void drawAdventureCardsForPlayer(Player player, int numberOfCards) {
-
+        for (int i = 0; i < numberOfCards; i++) {
+            Deck.Card card = drawAdventureCard();
+            if (card != null) {
+                player.receiveCard(card);
+            }
+        }
     }
     private void returnEventCardToBottom(Deck.Card card) {
         eventDeck.eventDeck.add(card);

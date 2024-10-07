@@ -24,10 +24,13 @@ public class Player {
         if (Objects.equals(card.description, "Plague: The player who draws this card immediately loses 2 shields.")) {
             loseShields(2);
         }
+        if (Objects.equals(card.description, "Queen's favor: The player who draws this card immediately draws 2 adventure cards.")) {
+            game.drawAdventureCardsForPlayer(this, 2); // Draw 2 adventure cards
+        }
     }
 
     public void playAdventureCard(int index){
-
+        hand.remove(index);
     }
 
     public void loseShields(int amount) {
