@@ -170,4 +170,31 @@ class MainTest {
         // Verify the player received 2 additional adventure cards
         assertEquals(11, currentPlayer.getHandSize());
     }
+
+    @Test
+    @DisplayName("Current Player draws Prosperity Event Card")
+    void RESP_08_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // Use some cards so Queens' favour will work without trimming, later tests will test trimming hand
+        for (Player player : game.getPlayers()){
+            player.playAdventureCard(0);
+            player.playAdventureCard(0);
+            player.playAdventureCard(0);
+        }
+
+        game.overwriteEventDeckCard(0, "E", "Prosperity: All players immediately draw 2 adventure cards.");
+
+        game.gameStart(printWriter);
+        System.out.println(output.toString());
+
+        // Verify the players received 2 additional adventure cards
+        for (Player player : game.getPlayers()){
+            assertEquals(11, player.getHandSize());
+        }
+    }
 }

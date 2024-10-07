@@ -86,6 +86,11 @@ public class Game {
             }
         }
     }
+
+    public void drawAdventureCardsForAllPlayers(int numberOfCards) {
+
+    }
+
     private void returnEventCardToBottom(Deck.Card card) {
         eventDeck.eventDeck.add(card);
     }

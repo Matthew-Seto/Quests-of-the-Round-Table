@@ -27,6 +27,9 @@ public class Player {
         if (Objects.equals(card.description, "Queen's favor: The player who draws this card immediately draws 2 adventure cards.")) {
             game.drawAdventureCardsForPlayer(this, 2); // Draw 2 adventure cards
         }
+        if (Objects.equals(card.description, "Prosperity: All players immediately draw 2 adventure cards.")) {
+            game.drawAdventureCardsForAllPlayers( 2); // Draw 2 adventure cards for every player
+        }
     }
 
     public void playAdventureCard(int index){
