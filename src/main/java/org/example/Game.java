@@ -6,7 +6,9 @@ import java.util.Scanner;
 
 public class Game {
     private final Deck advDeck;
+    private final Deck eventDeck;
     private final ArrayList<Player> players;
+
     private int currentPlayerIndex;
 
     public Game(int numberOfPlayers) {
@@ -15,9 +17,9 @@ public class Game {
             players.add(new Player("P" + i)); // Create players P1, P2, P3, ...
         }
         this.advDeck = new Deck();
-        Deck eventDeck = new Deck();
+        this.eventDeck = new Deck();
         this.advDeck.initializeAdventureDeck();
-        eventDeck.initializeEventDeck();
+        this.eventDeck.initializeEventDeck();
         this.currentPlayerIndex = 0;
     }
 
@@ -48,8 +50,24 @@ public class Game {
     public void nextTurn(PrintWriter output) {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         displayCurrentPlayerHand(output);
+        drawEventCard(getCurrentPlayer(), output);
     }
 
+    public void overwriteEventDeckCard(int index, String type, String description){
+
+    }
+
+    private void drawEventCard(Player player, PrintWriter output) {
+
+    }
+
+    private void returnEventCardToBottom(Deck.Card card) {
+
+    }
+
+    void givePlayerShields(Player player, int shields){
+
+    }
 
     public Player getCurrentPlayer(){
         return players.get(currentPlayerIndex);

@@ -127,4 +127,25 @@ class MainTest {
         System.out.println(output.toString());
         assertEquals("P1", game.getCurrentPlayer().getName());
     }
+
+    @Test
+    @DisplayName("Current Player draws Plague Event Card")
+    void RESP_06_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+        Player currentPlayer = game.getCurrentPlayer();
+
+        game.givePlayerShields(currentPlayer, 4);
+
+        game.overwriteEventDeckCard(0, "E", "Plague: The player who draws this card immediately loses 2 shields.");
+
+        game.gameStart(printWriter);
+        System.out.println(output.toString());
+
+        assertEquals(2, currentPlayer.getShields(), "Player should have 2 shields after drawing Plague card");
+    }
+
 }
