@@ -35,9 +35,6 @@ public class Game {
     }
 
     public void promptPlayer(Scanner input, PrintWriter output) {
-        output.println("Make your move (to end turn hit <return>): ");
-        output.flush(); // Flush output to ensure it’s printed immediately
-
         String inputStr = input.nextLine();
         if (inputStr.isEmpty()) {
             endCurrentPlayerTurn(output);
@@ -47,11 +44,26 @@ public class Game {
     public void endCurrentPlayerTurn(PrintWriter output) {
         output.println("Player " + getCurrentPlayer().getName() + "'s turn has ended.");
         flushDisplay(output);
-        nextTurn(output);
+
+        ArrayList<Player> winners = checkForWinners();
+        if (!winners.isEmpty()) {
+            for (Player winner : winners) {
+                output.println("Player " + winner.getName() + " has won the game!");
+            }
+        } else {
+            nextTurn(output);
+        }
+        output.flush();
     }
 
     private ArrayList<Player> checkForWinners() {
-        return null;
+        ArrayList<Player> winners = new ArrayList<>();
+        for (Player player : players) {
+            if (player.getShields() >= 7) {
+                winners.add(player);
+            }
+        }
+        return winners;
     }
 
     public void flushDisplay(PrintWriter output) {
@@ -92,6 +104,7 @@ public class Game {
             Deck.Card drawnCard = eventDeck.eventDeck.removeFirst();
             player.receiveEventCard(drawnCard);
             output.println(player.getName() + " drew an event card: " + drawnCard);
+            output.print("Make your move (to end turn hit <return>): ");
             returnEventCardToBottom(drawnCard);
         } else {
             output.println("No more event cards to draw.");
