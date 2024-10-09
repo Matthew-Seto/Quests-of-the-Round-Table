@@ -34,15 +34,50 @@ public class Game {
     }
 
     public void promptPlayer(Scanner input, PrintWriter output) {
+        if (getCurrentPlayer().getHandSize() > 12){
+            trimIfNeeded(input,output);
+        }
+
+        output.print("Make your move (to end turn hit <return>): ");
+        output.flush();
 
         String inputStr = input.nextLine();
         if (inputStr.isEmpty()) {
             endCurrentPlayerTurn(output);
         }
+        else{
+
+        }
     }
 
     public void trimIfNeeded(Scanner input, PrintWriter output){
+        Player player = getCurrentPlayer();
+        final int maxHandSize = 12;
+        if (player.getHandSize() > 12) {
+            output.println("Your hand has exceeded the maximum size of " + maxHandSize + " cards!");
+            output.println("You need to discard " + (player.getHandSize() - maxHandSize) + " card(s).");
 
+            while (player.getHandSize() > maxHandSize) {
+                displayCurrentPlayerHand(output);
+                output.print("Select a card to discard (1-" + player.getHandSize() + "): ");
+                output.flush();
+
+                try {
+                    int position = input.nextInt();
+                    input.nextLine();
+
+                    if (position > 0 && position <= player.getHandSize()) {
+                        player.getHand().remove(position - 1);
+                        output.println("Card discarded.");
+                    } else {
+                        output.println("Invalid position. Please try again.");
+                    }
+                } catch (Exception e) {
+                    output.println("Invalid input. Please enter a number.");
+                    input.nextLine();
+                }
+            }
+        }
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
