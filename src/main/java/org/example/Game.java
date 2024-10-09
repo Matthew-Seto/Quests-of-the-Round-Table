@@ -9,7 +9,6 @@ public class Game {
     private final Deck advDeck;
     private final Deck eventDeck;
     private final ArrayList<Player> players;
-
     private int currentPlayerIndex;
 
     public Game(int numberOfPlayers) {
@@ -35,10 +34,15 @@ public class Game {
     }
 
     public void promptPlayer(Scanner input, PrintWriter output) {
+
         String inputStr = input.nextLine();
         if (inputStr.isEmpty()) {
             endCurrentPlayerTurn(output);
         }
+    }
+
+    public void trimIfNeeded(Scanner input, PrintWriter output){
+
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
@@ -53,7 +57,6 @@ public class Game {
         } else {
             nextTurn(output);
         }
-        output.flush();
     }
 
     private ArrayList<Player> checkForWinners() {
@@ -80,7 +83,6 @@ public class Game {
 
     public void displayCurrentPlayerHand(PrintWriter output) {
         Player currentPlayer = players.get(currentPlayerIndex);
-        output.println(currentPlayer.getName() + "'s turn");
         output.println(currentPlayer.getName() + "'s hand:");
         for (Deck.Card card : currentPlayer.getHand()) {
             output.print(card + " ");
@@ -90,6 +92,7 @@ public class Game {
 
     public void nextTurn(PrintWriter output) {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        output.println(getCurrentPlayer().getName() + "'s turn");
         displayCurrentPlayerHand(output);
         drawEventCard(getCurrentPlayer(), output);
     }
@@ -104,7 +107,6 @@ public class Game {
             Deck.Card drawnCard = eventDeck.eventDeck.removeFirst();
             player.receiveEventCard(drawnCard);
             output.println(player.getName() + " drew an event card: " + drawnCard);
-            output.print("Make your move (to end turn hit <return>): ");
             returnEventCardToBottom(drawnCard);
         } else {
             output.println("No more event cards to draw.");

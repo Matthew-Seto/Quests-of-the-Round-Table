@@ -274,4 +274,69 @@ class MainTest {
         assertTrue(outputContent.contains("Player P1 has won the game!"));
         assertTrue(outputContent.contains("Player P2 has won the game!"));
     }
+
+    @Test
+    @DisplayName("Tests trimming of hand")
+    void RESP_11_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "1\n1\n\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // rig the deck
+        game.overwriteEventDeckCard(0, "E", "Queen's favor: The player who draws this card immediately draws 2 adventure cards.");
+        game.overwriteEventDeckCard(1, "Q", "2");
+
+        game.gameStart(printWriter);
+
+        try (Scanner scanner = new Scanner(input)) {
+            game.promptPlayer(scanner, printWriter);
+        }
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertEquals(12, game.getPlayers().getFirst().getHandSize());
+    }
+
+    @Test
+    @DisplayName("Tests trimming of hand for all players")
+    void RESP_11_test_02() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "1\n1\n\n1\n1\n\n1\n1\n\n1\n1\n\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        //rig the deck so no more draw Event cards are pulled
+        game.overwriteEventDeckCard(0, "E", "Prosperity: All players immediately draw 2 adventure cards.");
+        game.overwriteEventDeckCard(1, "Q", "2");
+        game.overwriteEventDeckCard(2, "Q", "4");
+        game.overwriteEventDeckCard(3, "Q", "3");
+        game.overwriteEventDeckCard(4, "Q", "3");
+
+
+        game.gameStart(printWriter);
+
+        try (Scanner scanner = new Scanner(input)) {
+            for (int i = 0; i < game.getPlayers().size(); i++) {
+                game.promptPlayer(scanner, printWriter);
+            }
+        }
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        for (Player player : game.getPlayers()) {
+            assertEquals(12, player.getHandSize(), "Player " + player.getName() + " does not have the correct hand size.");
+        }
+    }
+
 }
