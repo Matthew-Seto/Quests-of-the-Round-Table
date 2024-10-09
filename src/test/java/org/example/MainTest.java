@@ -222,4 +222,56 @@ class MainTest {
         assertTrue(outputContent.contains("Player P1's turn has ended."));
         assertTrue(outputContent.contains("P2's turn"));
     }
+
+    @Test
+    @DisplayName("At the end of a turn the game checks if players have won")
+    void RESP_10_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+        //Give player 1 7 shields
+        game.givePlayerShields(game.getCurrentPlayer(), 7);
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("Player P1 has won the game!"));
+    }
+
+    @Test
+    @DisplayName("Two Winners")
+    void RESP_10_test_02() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+        //Give player 1 and player 2 7 shields
+        game.givePlayerShields(game.getCurrentPlayer(), 7);
+        game.givePlayerShields(game.getPlayers().get(1), 7);
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("Player P1 has won the game!"));
+        assertTrue(outputContent.contains("Player P2 has won the game!"));
+    }
 }

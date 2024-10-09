@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Game {
@@ -49,6 +50,10 @@ public class Game {
         nextTurn(output);
     }
 
+    private ArrayList<Player> checkForWinners() {
+        return null;
+    }
+
     public void flushDisplay(PrintWriter output) {
         for (int i = 0; i < 8; i++) {
             output.println();
@@ -87,7 +92,6 @@ public class Game {
             Deck.Card drawnCard = eventDeck.eventDeck.removeFirst();
             player.receiveEventCard(drawnCard);
             output.println(player.getName() + " drew an event card: " + drawnCard);
-
             returnEventCardToBottom(drawnCard);
         } else {
             output.println("No more event cards to draw.");
