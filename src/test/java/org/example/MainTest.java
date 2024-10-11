@@ -208,7 +208,8 @@ class MainTest {
         String input = "\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
-
+        // DUMMY CARD
+        game.overwriteEventDeckCard(0,"NULL","");
         game.gameStart(printWriter);
 
         Scanner scanner = new Scanner(input);
@@ -234,7 +235,8 @@ class MainTest {
         PrintWriter printWriter = new PrintWriter(output);
         //Give player 1 7 shields
         game.givePlayerShields(game.getCurrentPlayer(), 7);
-
+        // DUMMY CARD
+        game.overwriteEventDeckCard(0,"NULL","");
         game.gameStart(printWriter);
 
         Scanner scanner = new Scanner(input);
@@ -260,9 +262,9 @@ class MainTest {
         //Give player 1 and player 2 7 shields
         game.givePlayerShields(game.getCurrentPlayer(), 7);
         game.givePlayerShields(game.getPlayers().get(1), 7);
-
+        // DUMMY CARD
+        game.overwriteEventDeckCard(0,"NULL","");
         game.gameStart(printWriter);
-
         Scanner scanner = new Scanner(input);
         game.promptPlayer(scanner, printWriter);
 
@@ -315,10 +317,11 @@ class MainTest {
 
         //rig the deck so no more draw Event cards are pulled
         game.overwriteEventDeckCard(0, "E", "Prosperity: All players immediately draw 2 adventure cards.");
-        game.overwriteEventDeckCard(1, "Q", "2");
-        game.overwriteEventDeckCard(2, "Q", "4");
-        game.overwriteEventDeckCard(3, "Q", "3");
-        game.overwriteEventDeckCard(4, "Q", "3");
+        // DUMMY CARD
+        game.overwriteEventDeckCard(1,"NULL","");
+        game.overwriteEventDeckCard(2,"NULL","");
+        game.overwriteEventDeckCard(3,"NULL","");
+        game.overwriteEventDeckCard(4,"NULL","");
 
 
         game.gameStart(printWriter);
