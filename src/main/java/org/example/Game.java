@@ -10,6 +10,7 @@ public class Game {
     private final Deck eventDeck;
     private final ArrayList<Player> players;
     private int currentPlayerIndex;
+    private boolean QcardDrawn;
 
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
@@ -37,7 +38,6 @@ public class Game {
         if (getCurrentPlayer().getHandSize() > 12){
             trimIfNeeded(input,output);
         }
-
         output.print("Make your move (to end turn hit <return>): ");
         output.flush();
 
@@ -46,7 +46,6 @@ public class Game {
             endCurrentPlayerTurn(output);
         }
         else{
-
         }
     }
 
@@ -78,6 +77,14 @@ public class Game {
                 }
             }
         }
+    }
+
+    public void handleQuestSponsorship(Scanner input, PrintWriter output) {
+
+    }
+
+    private boolean promptForSponsorship(Player player, Scanner input, PrintWriter output) {
+        return false;
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
@@ -140,8 +147,9 @@ public class Game {
     private void drawEventCard(Player player, PrintWriter output) {
         if (eventDeck.getEventDeckSize() > 0) {
             Deck.Card drawnCard = eventDeck.eventDeck.removeFirst();
-            player.receiveEventCard(drawnCard);
             output.println(player.getName() + " drew an event card: " + drawnCard);
+            output.flush();
+            player.receiveEventCard(drawnCard);
             returnEventCardToBottom(drawnCard);
         } else {
             output.println("No more event cards to draw.");
@@ -188,5 +196,9 @@ public class Game {
 
     public ArrayList<Player> getPlayers() {
         return players;
+    }
+
+    public void QcardisDrawn() {
+
     }
 }

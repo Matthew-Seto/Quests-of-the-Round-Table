@@ -342,4 +342,32 @@ class MainTest {
         }
     }
 
+    @Test
+    @DisplayName("Q Card drawn, all players decline")
+    void RESP_12_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "no\nno\nno\nno\n\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        game.overwriteEventDeckCard(0,"Q3","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P1, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P2, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P3, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P4, do you want to sponsor the quest? (yes/no)"));
+    }
+
 }

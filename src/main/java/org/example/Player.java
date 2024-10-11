@@ -30,6 +30,9 @@ public class Player {
         if (Objects.equals(card.description, "Prosperity: All players immediately draw 2 adventure cards.")) {
             game.drawAdventureCardsForAllPlayers( 2); // Draw 2 adventure cards for every player
         }
+        if (card.type.contains("Q")) {
+            game.QcardisDrawn();
+        }
     }
 
     public void playAdventureCard(int index){
