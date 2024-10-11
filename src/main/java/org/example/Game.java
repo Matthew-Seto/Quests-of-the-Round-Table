@@ -35,18 +35,22 @@ public class Game {
     }
 
     public void promptPlayer(Scanner input, PrintWriter output) {
-        if (getCurrentPlayer().getHandSize() > 12){
-            trimIfNeeded(input,output);
-        }
-        output.print("Make your move (to end turn hit <return>): ");
-        output.flush();
+        trimIfNeeded(input, output);
 
-        String inputStr = input.nextLine();
-        if (inputStr.isEmpty()) {
-            endCurrentPlayerTurn(output);
+        if (QcardDrawn) {
+            handleQuestSponsorship(input, output);
+        } else {
+            output.print("Make your move (to end turn hit <return>): ");
+            output.flush();
+
+            String inputStr = input.nextLine();
+            if (inputStr.isEmpty()) {
+                endCurrentPlayerTurn(output);
+            } else {
+                // handle additional moves here
+            }
         }
-        else{
-        }
+
     }
 
     public void trimIfNeeded(Scanner input, PrintWriter output){
@@ -80,11 +84,37 @@ public class Game {
     }
 
     public void handleQuestSponsorship(Scanner input, PrintWriter output) {
+        Player currentPlayer = getCurrentPlayer();
+        boolean anyPlayerSponsors = false;
+        int startingIndex = players.indexOf(currentPlayer);
 
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get((startingIndex + i) % players.size());
+            boolean wantsToSponsor = promptForSponsorship(player, input, output);
+            if (wantsToSponsor) {
+                anyPlayerSponsors = true;
+                output.println(player.getName() + " has chosen to sponsor the quest.");
+                QcardDrawn = false;
+                // logic to handle a sponsored quest add here
+                break;
+            } else {
+                output.println(player.getName() + " declines to sponsor the quest.");
+            }
+        }
+
+        if (!anyPlayerSponsors) {
+            QcardDrawn = false;
+            output.println("No players sponsored the quest. The quest has ended.");
+        }
+        endCurrentPlayerTurn(output);
     }
 
     private boolean promptForSponsorship(Player player, Scanner input, PrintWriter output) {
-        return false;
+        output.print(player.getName() + ", do you want to sponsor the quest? (yes/no): ");
+        output.flush();
+
+        String response = input.nextLine().trim().toLowerCase();
+        return response.equals("yes");
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
@@ -120,6 +150,7 @@ public class Game {
 
     public void gameStart(PrintWriter output) {
         displayCurrentPlayerHand(output);
+        output.flush();
         drawEventCard(getCurrentPlayer(), output);
     }
 
@@ -199,6 +230,6 @@ public class Game {
     }
 
     public void QcardisDrawn() {
-
+        QcardDrawn = true;
     }
 }
