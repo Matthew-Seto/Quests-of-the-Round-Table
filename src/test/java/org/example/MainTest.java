@@ -595,4 +595,52 @@ class MainTest {
         assertTrue(outputContent.contains("Stage 2 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
         assertTrue(outputContent.contains("Stage 2 set with cards: [F10, S10]"));
     }
+
+    @Test
+    @DisplayName("Test to check input validation")
+    void RESP_16_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        // test entering two foes and repeating the same weapon
+        String input = "yes\n13\n1\n1\n6\n5\nQuit\n1\n6\nquit";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // give p1 set hand
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 30));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("H", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        game.getPlayers().get(0).setHand(testHand);
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P1, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P1 has chosen to sponsor the quest."));
+        assertTrue(outputContent.contains("Stage 1 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
+        assertTrue(outputContent.contains("Invalid position. Please try again"));
+        assertTrue(outputContent.contains("Two foes cannot be on the same stage"));
+        assertTrue(outputContent.contains("The same weapon cannot be selected twice in one stage"));
+    }
 }

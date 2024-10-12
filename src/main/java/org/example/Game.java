@@ -149,10 +149,12 @@ public class Game {
                         int position = Integer.parseInt(response);
                         if (position > 0 && position <= sponsor.getHandSize()) {
                             Deck.Card selectedCard = sponsor.getHand().get(position - 1);
-                            currentStage.add(selectedCard);
-                            sponsor.playAdventureCard(position - 1);
-                            currentStageValue += selectedCard.value;
-                            output.println("Card added: " + selectedCard);
+                            if (isValidCardForStage(selectedCard, currentStage, output)) {
+                                currentStage.add(selectedCard);
+                                sponsor.playAdventureCard(position - 1);
+                                currentStageValue += selectedCard.value;
+                                output.println("Card added: " + selectedCard);
+                            }
                         } else {
                             output.println("Invalid position. Please try again.");
                         }
@@ -165,6 +167,14 @@ public class Game {
 
         // Set up the quest with the stages
         setUpQuest(stages);
+    }
+
+    private boolean isValidCardForStage(Deck.Card card, ArrayList<Deck.Card> currentStage, PrintWriter output) {
+        return false;
+    }
+
+    private boolean weaponCards(String cardType) {
+        return false;
     }
 
     private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages) {
