@@ -99,7 +99,7 @@ public class Game {
                 anyPlayerSponsors = true;
                 output.println(player.getName() + " has chosen to sponsor the quest.");
                 QcardDrawn = false;
-                // logic to handle a sponsored quest add here
+                sponsorSetsUpQuestStages(player, input, output, numberOfStages);
                 break;
             } else {
                 output.println(player.getName() + " declines to sponsor the quest.");
@@ -124,6 +124,14 @@ public class Game {
 
         String response = input.nextLine().trim().toLowerCase();
         return response.equals("yes");
+    }
+
+    private void sponsorSetsUpQuestStages(Player sponsor, Scanner input, PrintWriter output, int numberOfStages) {
+
+    }
+
+    private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages) {
+
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {

@@ -501,4 +501,98 @@ class MainTest {
         assertTrue(outputContent.contains("P1 does not have enough 'Foe' cards to sponsor the quest."));
         assertTrue(outputContent.contains("P1 declines to sponsor the quest."));
     }
+
+    @Test
+    @DisplayName("P1 decides to sponsor the quest and starts the setup")
+    void RESP_15_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "yes\n1\n6\nQuit\n1\n6\nquit";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // give p1 set hand
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 30));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("H", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        game.getPlayers().get(0).setHand(testHand);
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P1, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P1 has chosen to sponsor the quest."));
+        assertTrue(outputContent.contains("Stage 1 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
+        assertTrue(outputContent.contains("Stage 1 set with cards: [F5, D5]"));
+        assertTrue(outputContent.contains("Stage 2 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
+        assertTrue(outputContent.contains("Stage 2 set with cards: [F10, S10]"));
+    }
+
+    @Test
+    @DisplayName("P2 decides to sponsor the quest and starts the setup")
+    void RESP_15_test_02() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "no\nyes\n1\n6\nQuit\n1\n6\nquit";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // give p2 set hand
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 30));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("H", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        game.getPlayers().get(1).setHand(testHand);
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P2, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P2 has chosen to sponsor the quest."));
+        assertTrue(outputContent.contains("Stage 1 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
+        assertTrue(outputContent.contains("Stage 1 set with cards: [F5, D5]"));
+        assertTrue(outputContent.contains("Stage 2 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
+        assertTrue(outputContent.contains("Stage 2 set with cards: [F10, S10]"));
+    }
 }
