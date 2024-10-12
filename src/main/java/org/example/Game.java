@@ -141,9 +141,13 @@ public class Game {
 
                 String response = input.nextLine().trim().toLowerCase();
                 if (response.equals("quit")) {
-                    stages.add(currentStage);
-                    output.println("Stage " + stage + " set with cards: " + currentStage);
-                    break;
+                    if (currentStage.isEmpty()) {
+                        output.println("A stage cannot be empty.");
+                    } else {
+                        stages.add(currentStage);
+                        output.println("Stage " + stage + " set with cards: " + currentStage);
+                        break;
+                    }
                 } else {
                     try {
                         int position = Integer.parseInt(response);
