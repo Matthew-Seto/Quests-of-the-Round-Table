@@ -410,4 +410,95 @@ class MainTest {
         assertEquals(expectedHand.toString(), game.getPlayers().get(0).getHand().toString());
     }
 
+    @Test
+    @DisplayName("P1 decides to sponsor the quest and is eligible")
+    void RESP_14_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "yes\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        //rig P1 hand so that they are eligible
+        game.getPlayers().get(0).setCardInHand(0, new Deck.Card("F", 10));
+        game.getPlayers().get(0).setCardInHand(1, new Deck.Card("F", 10));
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P1, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P1 has chosen to sponsor the quest."));
+    }
+
+    @Test
+    @DisplayName("P2 decides to sponsor the quest and is eligible")
+    void RESP_14_test_02() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "no\nyes\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        //rig P2 hand so that they are eligible
+        game.getPlayers().get(1).setCardInHand(0, new Deck.Card("F", 10));
+        game.getPlayers().get(1).setCardInHand(1, new Deck.Card("F", 10));
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P2, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P2 has chosen to sponsor the quest."));
+    }
+
+    @Test
+    @DisplayName("P1 is ineligible to sponsor quest skip the player")
+    void RESP_14_test_03() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "no\nyes\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // set p1's hand to one foe card
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 10));
+
+        game.getPlayers().get(0).setHand(testHand);
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P1 does not have enough 'Foe' cards to sponsor the quest."));
+        assertTrue(outputContent.contains("P1 declines to sponsor the quest."));
+    }
 }

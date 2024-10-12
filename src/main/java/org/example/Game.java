@@ -11,6 +11,7 @@ public class Game {
     private final ArrayList<Player> players;
     private int currentPlayerIndex;
     private boolean QcardDrawn;
+    private Deck.Card currentEventCard;
 
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
@@ -22,6 +23,7 @@ public class Game {
         this.advDeck.initializeAdventureDeck();
         this.eventDeck.initializeEventDeck();
         this.currentPlayerIndex = 0;
+        this.currentEventCard = new Deck.Card("Null", 0);
     }
 
     public void distributeCards() {
@@ -88,9 +90,11 @@ public class Game {
         boolean anyPlayerSponsors = false;
         int startingIndex = players.indexOf(currentPlayer);
 
+        int numberOfStages = getNumberOfStagesFromQuest(currentEventCard);
+
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get((startingIndex + i) % players.size());
-            boolean wantsToSponsor = promptForSponsorship(player, input, output);
+            boolean wantsToSponsor = promptForSponsorship(player, input, output, numberOfStages);
             if (wantsToSponsor) {
                 anyPlayerSponsors = true;
                 output.println(player.getName() + " has chosen to sponsor the quest.");
@@ -109,7 +113,7 @@ public class Game {
         endCurrentPlayerTurn(output);
     }
 
-    private boolean promptForSponsorship(Player player, Scanner input, PrintWriter output) {
+    private boolean promptForSponsorship(Player player, Scanner input, PrintWriter output, int numberOfStages) {
         output.print(player.getName() + ", do you want to sponsor the quest? (yes/no): ");
         output.flush();
 
@@ -231,5 +235,9 @@ public class Game {
 
     public void QcardisDrawn() {
         QcardDrawn = true;
+    }
+
+    private int getNumberOfStagesFromQuest(Deck.Card questCard) {
+        return 0;
     }
 }

@@ -37,6 +37,10 @@ public class Player {
         }
     }
 
+    public int countFoeCards() {
+        return 0;
+    }
+
     public void playAdventureCard(int index){
         hand.remove(index);
     }
@@ -84,5 +88,9 @@ public class Player {
     public void setHand(ArrayList<Deck.Card> newHand) {
         this.hand = newHand;
         sortHand();
+    }
+
+    public void setCardInHand(int index, Deck.Card card){
+
     }
 }
