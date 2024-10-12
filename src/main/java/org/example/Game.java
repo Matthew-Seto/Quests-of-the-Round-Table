@@ -170,11 +170,20 @@ public class Game {
     }
 
     private boolean isValidCardForStage(Deck.Card card, ArrayList<Deck.Card> currentStage, PrintWriter output) {
-        return false;
+        if (card.type.equals("F") && currentStage.stream().anyMatch(c -> c.type.equals("F"))) {
+            output.println("Two foes cannot be on the same stage");
+            return false;
+        }
+        if (weaponCards(card.type) && currentStage.stream().anyMatch(c -> c.type.equals(card.type))) {
+            output.println("The same weapon cannot be selected twice in one stage");
+            return false;
+        }
+        return true;
     }
 
     private boolean weaponCards(String cardType) {
-        return false;
+        return cardType.equals("D") || cardType.equals("H") || cardType.equals("S") ||
+                cardType.equals("B") || cardType.equals("L") || cardType.equals("E");
     }
 
     private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages) {
