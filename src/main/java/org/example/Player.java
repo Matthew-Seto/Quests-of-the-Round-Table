@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
@@ -45,6 +46,14 @@ public class Player {
             }
         }
         return count;
+    }
+
+    public void displayHand(PrintWriter output){
+        output.println(this.getName() + "'s hand:");
+        for (Deck.Card card : this.getHand()) {
+            output.print(card + " ");
+        }
+        output.println();
     }
 
     public void playAdventureCard(int index){

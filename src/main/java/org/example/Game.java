@@ -127,7 +127,44 @@ public class Game {
     }
 
     private void sponsorSetsUpQuestStages(Player sponsor, Scanner input, PrintWriter output, int numberOfStages) {
+        ArrayList<ArrayList<Deck.Card>> stages = new ArrayList<>();
+        int previousStageValue = 0;
 
+        for (int stage = 1; stage <= numberOfStages; stage++) {
+            ArrayList<Deck.Card> currentStage = new ArrayList<>();
+            int currentStageValue = 0;
+
+            while (true) {
+                sponsor.displayHand(output);
+                output.print("Stage " + stage + " - Enter the position of the next card to include in this stage or 'Quit' to end: ");
+                output.flush();
+
+                String response = input.nextLine().trim().toLowerCase();
+                if (response.equals("quit")) {
+                    stages.add(currentStage);
+                    output.println("Stage " + stage + " set with cards: " + currentStage);
+                    break;
+                } else {
+                    try {
+                        int position = Integer.parseInt(response);
+                        if (position > 0 && position <= sponsor.getHandSize()) {
+                            Deck.Card selectedCard = sponsor.getHand().get(position - 1);
+                            currentStage.add(selectedCard);
+                            sponsor.playAdventureCard(position - 1);
+                            currentStageValue += selectedCard.value;
+                            output.println("Card added: " + selectedCard);
+                        } else {
+                            output.println("Invalid position. Please try again.");
+                        }
+                    } catch (NumberFormatException e) {
+                        output.println("Invalid input. Please enter a valid position or 'quit'.");
+                    }
+                }
+            }
+        }
+
+        // Set up the quest with the stages
+        setUpQuest(stages);
     }
 
     private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages) {
