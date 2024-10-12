@@ -143,8 +143,11 @@ public class Game {
                 if (response.equals("quit")) {
                     if (currentStage.isEmpty()) {
                         output.println("A stage cannot be empty.");
+                    } else if (currentStageValue <= previousStageValue) {
+                        output.println("Insufficient value for this stage.");
                     } else {
                         stages.add(currentStage);
+                        previousStageValue = currentStageValue;
                         output.println("Stage " + stage + " set with cards: " + currentStage);
                         break;
                     }
