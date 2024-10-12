@@ -65,10 +65,24 @@ public class Player {
     }
 
     public void sortHand() {
+        hand.sort(new Comparator<Deck.Card>() {
+            @Override
+            public int compare(Deck.Card c1, Deck.Card c2) {
+                if (c1.type.equals("F") && !c2.type.equals("F")) return -1;
+                if (!c1.type.equals("F") && c2.type.equals("F")) return 1;
 
+                int valueComparison = Integer.compare(c1.value, c2.value);
+                if (valueComparison != 0) {
+                    return valueComparison;
+                }
+
+                return c1.type.compareTo(c2.type);
+            }
+        });
     }
 
     public void setHand(ArrayList<Deck.Card> newHand) {
-
+        this.hand = newHand;
+        sortHand();
     }
 }
