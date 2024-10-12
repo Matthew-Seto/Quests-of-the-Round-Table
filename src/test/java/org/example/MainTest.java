@@ -2,6 +2,8 @@ package org.example;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -352,7 +354,7 @@ class MainTest {
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
-        game.overwriteEventDeckCard(0,"Q3","");
+        game.overwriteEventDeckCard(0,"Q1","");
 
         game.gameStart(printWriter);
 
@@ -642,5 +644,52 @@ class MainTest {
         assertTrue(outputContent.contains("Invalid position. Please try again"));
         assertTrue(outputContent.contains("Two foes cannot be on the same stage"));
         assertTrue(outputContent.contains("The same weapon cannot be selected twice in one stage"));
+    }
+
+    @Test
+    @DisplayName("Empty Stage test")
+    void RESP_17_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "yes\nQuit\nquit\n1\n6\nQuit\n1\n6\nquit\n";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        Scanner scanner = new Scanner(inputStream);
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // give p1 set hand
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 30));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("H", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        game.getPlayers().get(0).setHand(testHand);
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        assertTrue(outputContent.contains("P1, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("P1 has chosen to sponsor the quest."));
+        assertTrue(outputContent.contains("Stage 1 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
+        assertTrue(outputContent.contains("A stage cannot be empty."));
     }
 }
