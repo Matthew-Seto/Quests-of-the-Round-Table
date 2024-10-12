@@ -114,6 +114,11 @@ public class Game {
     }
 
     private boolean promptForSponsorship(Player player, Scanner input, PrintWriter output, int numberOfStages) {
+        if (player.countFoeCards() < numberOfStages) {
+            output.println(player.getName() + " does not have enough 'Foe' cards to sponsor the quest.");
+            return false;
+        }
+
         output.print(player.getName() + ", do you want to sponsor the quest? (yes/no): ");
         output.flush();
 
@@ -185,6 +190,7 @@ public class Game {
             output.println(player.getName() + " drew an event card: " + drawnCard);
             output.flush();
             player.receiveEventCard(drawnCard);
+            currentEventCard = drawnCard;
             returnEventCardToBottom(drawnCard);
         } else {
             output.println("No more event cards to draw.");
@@ -238,6 +244,6 @@ public class Game {
     }
 
     private int getNumberOfStagesFromQuest(Deck.Card questCard) {
-        return 0;
+        return Integer.parseInt(questCard.type.substring(1));
     }
 }

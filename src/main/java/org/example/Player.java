@@ -38,7 +38,13 @@ public class Player {
     }
 
     public int countFoeCards() {
-        return 0;
+        int count = 0;
+        for (Deck.Card card : hand) {
+            if (card.type.equals("F")) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void playAdventureCard(int index){
@@ -91,6 +97,7 @@ public class Player {
     }
 
     public void setCardInHand(int index, Deck.Card card){
-
+        hand.set(index,card);
+        sortHand();
     }
 }
