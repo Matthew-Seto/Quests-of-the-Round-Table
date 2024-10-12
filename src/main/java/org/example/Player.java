@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Player {
@@ -18,6 +19,7 @@ public class Player {
 
     public void receiveCard(Deck.Card card) {
         hand.add(card);
+        sortHand();
     }
 
     public void receiveEventCard(Deck.Card card) {
@@ -60,5 +62,13 @@ public class Player {
 
     public ArrayList<Deck.Card> getHand() {
         return hand;
+    }
+
+    public void sortHand() {
+
+    }
+
+    public void setHand(ArrayList<Deck.Card> newHand) {
+
     }
 }

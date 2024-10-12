@@ -370,4 +370,44 @@ class MainTest {
         assertTrue(outputContent.contains("P4, do you want to sponsor the quest? (yes/no)"));
     }
 
+    @Test
+    // I watched the demo lecture again and realized the prof said this is needed
+    @DisplayName("Check hands are displayed in sorted order and sorted")
+    void RESP_13_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("F", 30));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("H", 10));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        game.getPlayers().get(0).setHand(testHand);
+
+        ArrayList<Deck.Card> expectedHand = new ArrayList<>();
+        expectedHand.add(new Deck.Card("F", 5));
+        expectedHand.add(new Deck.Card("F", 10));
+        expectedHand.add(new Deck.Card("F", 20));
+        expectedHand.add(new Deck.Card("F", 30));
+        expectedHand.add(new Deck.Card("F", 35));
+        expectedHand.add(new Deck.Card("D", 5));
+        expectedHand.add(new Deck.Card("D", 5));
+        expectedHand.add(new Deck.Card("H", 10));
+        expectedHand.add(new Deck.Card("S", 10));
+        expectedHand.add(new Deck.Card("L", 20));
+        expectedHand.add(new Deck.Card("L", 20));
+        expectedHand.add(new Deck.Card("L", 20));
+
+        assertEquals(expectedHand.toString(), game.getPlayers().get(0).getHand().toString());
+    }
+
 }
