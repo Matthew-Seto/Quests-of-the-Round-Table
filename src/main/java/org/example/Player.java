@@ -112,14 +112,50 @@ public class Player {
     }
 
     public void setupAttack(Scanner input, PrintWriter output) {
+        ArrayList<Deck.Card> attack = new ArrayList<>();
+        while (true) {
+            displayHand(output);
+            output.print("Enter the position of the next card to include in the attack or 'quit' to end: ");
+            output.flush();
 
+            String response = input.nextLine().trim().toLowerCase();
+            if (response.equals("quit")) {
+                if (!attack.isEmpty()) {
+                    output.println("Attack set with cards: " + attack);
+                } else {
+                    output.println("No cards selected for the attack.");
+                }
+                break;
+            } else {
+                try {
+                    int position = Integer.parseInt(response) - 1;
+                    if (position >= 0 && position < getHandSize()) {
+                        Deck.Card selectedCard = hand.get(position);
+                        if (isValidCardForAttack(selectedCard, attack, output)) {
+                            attack.add(selectedCard);
+                            playAdventureCard(position);
+                            output.println("Card added: " + selectedCard);
+                        }
+                    } else {
+                        output.println("Invalid position. Please try again.");
+                    }
+                } catch (NumberFormatException e) {
+                    output.println("Invalid input. Please enter a valid position or 'quit'.");
+                }
+            }
+        }
     }
 
     private boolean isValidCardForAttack(Deck.Card card, ArrayList<Deck.Card> currentAttack, PrintWriter output) {
-        return false;
+        if (weaponCards(card.type) && currentAttack.stream().anyMatch(c -> c.type.equals(card.type))) {
+            output.println("The same weapon cannot be selected twice in one attack.");
+            return false;
+        }
+        return true;
     }
 
     private boolean weaponCards(String cardType) {
-        return false;
+        return cardType.equals("D") || cardType.equals("H") || cardType.equals("S") ||
+                cardType.equals("B") || cardType.equals("L") || cardType.equals("E");
     }
 }
