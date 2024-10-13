@@ -739,4 +739,55 @@ class MainTest {
         assertTrue(outputContent.contains("Stage 1 - Enter the position of the next card to include in this stage or 'Quit' to end:"));
         assertTrue(outputContent.contains("Insufficient value for this stage."));
     }
+
+    @Test
+    @DisplayName("P1 decides to sponsor the quest and sets it up, remove ineligible players, draw cards for participants")
+    void RESP_19_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "yes\n1\n6\nQuit\n1\n6\nquit\nno\nno\n1\n\n1\n\n";
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // give p1 set hand
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 30));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("H", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        ArrayList<Deck.Card> p2badhand = new ArrayList<>();
+        p2badhand.add(new Deck.Card("F", 5));
+        // make p2 ineligible
+        game.getPlayers().get(1).setHand(p2badhand);
+
+        game.getPlayers().get(0).setHand(testHand);
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        // check that trim and asking for participation is working
+        assertTrue(outputContent.contains("P3, do you want to withdraw from the quest? (yes/no): "));
+        assertTrue(outputContent.contains("P4, do you want to withdraw from the quest? (yes/no): "));
+        assertTrue(outputContent.contains("P3's hand:"));
+        assertTrue(outputContent.contains("P4's hand:"));
+    }
 }
