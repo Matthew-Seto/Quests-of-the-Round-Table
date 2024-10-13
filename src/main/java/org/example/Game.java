@@ -230,14 +230,25 @@ public class Game {
             trimIfNeeded(participant,input,output);
         }
 
-
+        if (participantsForQuest.isEmpty()) {
+            output.println("No participants for the current stage. The quest ends.");
+            handleEndOfQuest(stages,input,output,sponsor);
+            return;
+        }
 
         handleEndOfQuest(stages,input,output,sponsor);
         ineligiblePlayers.clear();
     }
 
     public void handleEndOfQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output, Player sponsor){
+        int numberOfCardsToDraw = cardsUsedInQuest + stages.size();
+        output.println("The quest has ended. " + sponsor.getName() + " has drawn " + numberOfCardsToDraw + " new cards.");
+        output.flush();
+        drawAdventureCardsForPlayer(sponsor, numberOfCardsToDraw);
 
+        trimIfNeeded(sponsor, input, output);
+
+        cardsUsedInQuest = 0;
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
