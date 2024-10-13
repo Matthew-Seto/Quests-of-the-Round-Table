@@ -13,6 +13,7 @@ public class Game {
     private boolean QcardDrawn;
     private Deck.Card currentEventCard;
     private final ArrayList<Player> ineligiblePlayers;
+    private int cardsUsedInQuest;
 
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
@@ -164,6 +165,7 @@ public class Game {
                             if (isValidCardForStage(selectedCard, currentStage, output)) {
                                 currentStage.add(selectedCard);
                                 sponsor.playAdventureCard(position - 1);
+                                cardsUsedInQuest++;
                                 currentStageValue += selectedCard.value;
                                 output.println("Card added: " + selectedCard);
                             }
@@ -178,7 +180,7 @@ public class Game {
         }
 
         // Set up the quest with the stages
-        setUpQuest(stages,input,output);
+        setUpQuest(stages,input,output,sponsor);
     }
 
     private boolean isValidCardForStage(Deck.Card card, ArrayList<Deck.Card> currentStage, PrintWriter output) {
@@ -198,7 +200,7 @@ public class Game {
                 cardType.equals("B") || cardType.equals("L") || cardType.equals("E");
     }
 
-    private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output) {
+    private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output, Player sponsor) {
         for (Player player : getPlayers()){
             if (player.countFoeCards() < stages.size()) {
                 output.println(player.getName() + " does not have enough 'Foe' cards to participate in the quest.");
@@ -228,7 +230,14 @@ public class Game {
             trimIfNeeded(participant,input,output);
         }
 
+
+
+        handleEndOfQuest(stages,input,output,sponsor);
         ineligiblePlayers.clear();
+    }
+
+    public void handleEndOfQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output, Player sponsor){
+
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
