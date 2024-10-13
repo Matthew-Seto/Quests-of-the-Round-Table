@@ -12,6 +12,7 @@ public class Game {
     private int currentPlayerIndex;
     private boolean QcardDrawn;
     private Deck.Card currentEventCard;
+    private final ArrayList<Player> ineligiblePlayers;
 
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
@@ -24,6 +25,7 @@ public class Game {
         this.eventDeck.initializeEventDeck();
         this.currentPlayerIndex = 0;
         this.currentEventCard = new Deck.Card("Null", 0);
+        this.ineligiblePlayers = new ArrayList<>();
     }
 
     public void distributeCards() {
@@ -37,7 +39,7 @@ public class Game {
     }
 
     public void promptPlayer(Scanner input, PrintWriter output) {
-        trimIfNeeded(input, output);
+        trimIfNeeded(getCurrentPlayer(),input, output);
 
         if (QcardDrawn) {
             handleQuestSponsorship(input, output);
@@ -55,15 +57,14 @@ public class Game {
 
     }
 
-    public void trimIfNeeded(Scanner input, PrintWriter output){
-        Player player = getCurrentPlayer();
+    public void trimIfNeeded(Player player, Scanner input, PrintWriter output){
         final int maxHandSize = 12;
         if (player.getHandSize() > 12) {
             output.println("Your hand has exceeded the maximum size of " + maxHandSize + " cards!");
             output.println("You need to discard " + (player.getHandSize() - maxHandSize) + " card(s).");
 
             while (player.getHandSize() > maxHandSize) {
-                displayCurrentPlayerHand(output);
+                player.displayHand(output);
                 output.print("Select a card to discard (1-" + player.getHandSize() + "): ");
                 output.flush();
 
@@ -103,6 +104,7 @@ public class Game {
                 break;
             } else {
                 output.println(player.getName() + " declines to sponsor the quest.");
+                ineligiblePlayers.add(player);
             }
         }
 
@@ -116,6 +118,7 @@ public class Game {
     private boolean promptForSponsorship(Player player, Scanner input, PrintWriter output, int numberOfStages) {
         if (player.countFoeCards() < numberOfStages) {
             output.println(player.getName() + " does not have enough 'Foe' cards to sponsor the quest.");
+            ineligiblePlayers.add(player);
             return false;
         }
 
@@ -123,6 +126,8 @@ public class Game {
         output.flush();
 
         String response = input.nextLine().trim().toLowerCase();
+        // remove the sponsor from the eligible players
+        ineligiblePlayers.add(player);
         return response.equals("yes");
     }
 
@@ -173,7 +178,7 @@ public class Game {
         }
 
         // Set up the quest with the stages
-        setUpQuest(stages);
+        setUpQuest(stages,input,output);
     }
 
     private boolean isValidCardForStage(Deck.Card card, ArrayList<Deck.Card> currentStage, PrintWriter output) {
@@ -193,8 +198,37 @@ public class Game {
                 cardType.equals("B") || cardType.equals("L") || cardType.equals("E");
     }
 
-    private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages) {
+    private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output) {
+        for (Player player : getPlayers()){
+            if (player.countFoeCards() < stages.size()) {
+                output.println(player.getName() + " does not have enough 'Foe' cards to participate in the quest.");
+                ineligiblePlayers.add(player);
+            }
+        }
 
+        ArrayList<Player> eligibleParticipants = new ArrayList<>(players);
+        eligibleParticipants.removeAll(ineligiblePlayers);
+        ArrayList<Player> participantsForQuest = new ArrayList<>();
+
+        for (Player participant : eligibleParticipants) {
+            output.println(participant.getName() + ", do you want to withdraw from the quest? (yes/no): ");
+            output.flush();
+            String response = input.nextLine().trim().toLowerCase();
+            if (response.equals("no")) {
+                participantsForQuest.add(participant);
+            } else {
+                output.println(participant.getName() + " has withdrawn from the quest.");
+                ineligiblePlayers.add(participant);
+            }
+        }
+
+        for (Player participant : participantsForQuest){
+            drawAdventureCardsForPlayer(participant, 1);
+            participant.displayHand(output);
+            trimIfNeeded(participant,input,output);
+        }
+
+        ineligiblePlayers.clear();
     }
 
     public void endCurrentPlayerTurn(PrintWriter output) {
@@ -229,24 +263,15 @@ public class Game {
     }
 
     public void gameStart(PrintWriter output) {
-        displayCurrentPlayerHand(output);
+        getCurrentPlayer().displayHand(output);
         output.flush();
         drawEventCard(getCurrentPlayer(), output);
-    }
-
-    public void displayCurrentPlayerHand(PrintWriter output) {
-        Player currentPlayer = players.get(currentPlayerIndex);
-        output.println(currentPlayer.getName() + "'s hand:");
-        for (Deck.Card card : currentPlayer.getHand()) {
-            output.print(card + " ");
-        }
-        output.println();
     }
 
     public void nextTurn(PrintWriter output) {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         output.println(getCurrentPlayer().getName() + "'s turn");
-        displayCurrentPlayerHand(output);
+        getCurrentPlayer().displayHand(output);
         drawEventCard(getCurrentPlayer(), output);
     }
 
