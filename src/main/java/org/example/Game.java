@@ -210,30 +210,34 @@ public class Game {
 
         ArrayList<Player> eligibleParticipants = new ArrayList<>(players);
         eligibleParticipants.removeAll(ineligiblePlayers);
-        ArrayList<Player> participantsForQuest = new ArrayList<>();
 
-        for (Player participant : eligibleParticipants) {
-            output.println(participant.getName() + ", do you want to withdraw from the quest? (yes/no): ");
-            output.flush();
-            String response = input.nextLine().trim().toLowerCase();
-            if (response.equals("no")) {
-                participantsForQuest.add(participant);
-            } else {
-                output.println(participant.getName() + " has withdrawn from the quest.");
-                ineligiblePlayers.add(participant);
+        for (int stage = 1; stage <= stages.size(); stage++) {
+            output.println("Stage " + stage + ":");
+
+            ArrayList<Player> participantsForStage = new ArrayList<>();
+            for (Player participant : eligibleParticipants) {
+                output.println(participant.getName() + ", do you want to withdraw from the quest? (yes/no): ");
+                output.flush();
+                String response = input.nextLine().trim().toLowerCase();
+                if (response.equals("no")) {
+                    participantsForStage.add(participant);
+                } else {
+                    output.println(participant.getName() + " has withdrawn from the quest.");
+                    ineligiblePlayers.add(participant);
+                }
             }
-        }
 
-        for (Player participant : participantsForQuest){
-            drawAdventureCardsForPlayer(participant, 1);
-            participant.displayHand(output);
-            trimIfNeeded(participant,input,output);
-        }
+            for (Player participant : participantsForStage) {
+                drawAdventureCardsForPlayer(participant, 1);
+                participant.displayHand(output);
+                trimIfNeeded(participant, input, output);
+            }
 
-        if (participantsForQuest.isEmpty()) {
-            output.println("No participants for the current stage. The quest ends.");
-            handleEndOfQuest(stages,input,output,sponsor);
-            return;
+            if (participantsForStage.isEmpty()) {
+                output.println("No participants for the current stage. The quest ends.");
+                handleEndOfQuest(stages, input, output, sponsor);
+                return;
+            }
         }
 
         handleEndOfQuest(stages,input,output,sponsor);

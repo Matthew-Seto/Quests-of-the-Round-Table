@@ -801,6 +801,8 @@ class MainTest {
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
+        // make sure 2nd card is not prosperity this will change p1 hand size.
+        game.overwriteEventDeckCard(1,"Q3", "");
         // give p1 set hand
         ArrayList<Deck.Card> testHand = new ArrayList<>();
         testHand.add(new Deck.Card("F", 5));
