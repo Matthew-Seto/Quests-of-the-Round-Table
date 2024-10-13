@@ -216,7 +216,7 @@ public class Game {
 
             ArrayList<Player> participantsForStage = new ArrayList<>();
             for (Player participant : eligibleParticipants) {
-                output.println(participant.getName() + ", do you want to withdraw from the quest? (yes/no): ");
+                output.print(participant.getName() + ", do you want to withdraw from the quest? (yes/no): ");
                 output.flush();
                 String response = input.nextLine().trim().toLowerCase();
                 if (response.equals("no")) {
@@ -238,6 +238,12 @@ public class Game {
                 handleEndOfQuest(stages, input, output, sponsor);
                 return;
             }
+
+            for (Player participant : participantsForStage) {
+                participant.setupAttack(input, output);
+            }
+
+
         }
 
         handleEndOfQuest(stages,input,output,sponsor);

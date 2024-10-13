@@ -843,4 +843,59 @@ class MainTest {
         assertTrue(outputContent.contains("P1's hand:"));
         assertTrue(outputContent.contains("Player P1's turn has ended."));
     }
+
+    @Test
+    @DisplayName("P1 decides to sponsor the quest and sets it up, P3 and P4 want to participate and start setting up attacks")
+    void RESP_21_test_01() {
+        Game game = new Game(4);
+        game.distributeCards();
+
+        String input = "yes\n1\n6\nQuit\n1\n6\nquit\nno\nno\n1\n1\n12\nquit\n12\nquit\nyes\nyes\n1\n1\n";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        Scanner scanner = new Scanner(inputStream);
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        // make sure 2nd card is not prosperity this will change p1 hand size.
+        game.overwriteEventDeckCard(1,"Q3", "");
+        // give p1 set hand
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 30));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("H", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        ArrayList<Deck.Card> p2badhand = new ArrayList<>();
+        p2badhand.add(new Deck.Card("F", 5));
+        // make p2 ineligible
+        game.getPlayers().get(1).setHand(p2badhand);
+
+        game.getPlayers().get(0).setHand(testHand);
+
+        game.overwriteEventDeckCard(0,"Q2","");
+
+        game.gameStart(printWriter);
+
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        // make sure p1 has hand size 12 after getting new cards and trimming
+        assertEquals(12, game.getPlayers().get(0).getHandSize());
+        assertTrue(outputContent.contains("No participants for the current stage. The quest ends."));
+        assertTrue(outputContent.contains("Enter the position of the next card to include in the attack or 'quit' to end:"));
+        assertTrue(outputContent.contains("Attack set with cards:"));
+    }
 }

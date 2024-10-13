@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Player {
     private final String name;
@@ -108,5 +109,17 @@ public class Player {
     public void setCardInHand(int index, Deck.Card card){
         hand.set(index,card);
         sortHand();
+    }
+
+    public void setupAttack(Scanner input, PrintWriter output) {
+
+    }
+
+    private boolean isValidCardForAttack(Deck.Card card, ArrayList<Deck.Card> currentAttack, PrintWriter output) {
+        return false;
+    }
+
+    private boolean weaponCards(String cardType) {
+        return false;
     }
 }
