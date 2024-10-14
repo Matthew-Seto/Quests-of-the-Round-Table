@@ -23,7 +23,7 @@ public class Deck {
             if (description != null) {
                 return type + ": " + description;
             } else {
-                return type + "" + value;
+                return type + value;
             }
         }
     }

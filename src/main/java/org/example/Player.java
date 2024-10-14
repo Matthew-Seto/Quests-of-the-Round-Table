@@ -32,9 +32,6 @@ public class Player {
         if (Objects.equals(card.description, "Queen's favor: The player who draws this card immediately draws 2 adventure cards.")) {
             game.drawAdventureCardsForPlayer(this, 2); // Draw 2 adventure cards
         }
-        if (Objects.equals(card.description, "Prosperity: All players immediately draw 2 adventure cards.")) {
-            game.drawAdventureCardsForAllPlayers( 2); // Draw 2 adventure cards for every player
-        }
         if (card.type.contains("Q")) {
             game.QcardisDrawn();
         }
@@ -59,7 +56,7 @@ public class Player {
     }
 
     public void playAdventureCard(int index){
-        hand.remove(index);
+        game.getAdventureDeck().adventureDeck.add(hand.remove(index));
     }
 
     public void loseShields(int amount) {

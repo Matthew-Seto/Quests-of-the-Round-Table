@@ -180,10 +180,11 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
+        String input = "\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
-        // Use some cards so Queens' favour will work without trimming, later tests will test trimming hand
+        // Use some cards so prosperity will work without trimming, later tests will test trimming hand
         for (Player player : game.getPlayers()){
             player.playAdventureCard(0);
             player.playAdventureCard(0);
@@ -194,6 +195,9 @@ class MainTest {
 
         game.gameStart(printWriter);
         System.out.println(output.toString());
+
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
 
         // Verify the players received 2 additional adventure cards
         for (Player player : game.getPlayers()){
@@ -313,7 +317,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "1\n1\n\n1\n1\n\n1\n1\n\n1\n1\n\n";
+        String input = "1\n1\n1\n1\n1\n1\n1\n1\n\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
@@ -327,12 +331,9 @@ class MainTest {
 
 
         game.gameStart(printWriter);
+        Scanner scanner = new Scanner(input);
+        game.promptPlayer(scanner, printWriter);
 
-        try (Scanner scanner = new Scanner(input)) {
-            for (int i = 0; i < game.getPlayers().size(); i++) {
-                game.promptPlayer(scanner, printWriter);
-            }
-        }
 
         printWriter.flush();
 
@@ -354,7 +355,7 @@ class MainTest {
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
-        game.overwriteEventDeckCard(0,"Q1","");
+        game.overwriteQuestEventDeckCard(0,"Q",1);
 
         game.gameStart(printWriter);
 
@@ -370,6 +371,7 @@ class MainTest {
         assertTrue(outputContent.contains("P2, do you want to sponsor the quest? (yes/no)"));
         assertTrue(outputContent.contains("P3, do you want to sponsor the quest? (yes/no)"));
         assertTrue(outputContent.contains("P4, do you want to sponsor the quest? (yes/no)"));
+        assertTrue(outputContent.contains("No players sponsored the quest. The quest has ended."));
     }
 
     @Test
@@ -418,19 +420,33 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "yes\n";
+        String input = "yes\n1\n6\nquit\n1\n6\nquit\nyes\nyes\nyes\n1\n1\n";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        Scanner scanner = new Scanner(inputStream);
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
         //rig P1 hand so that they are eligible
-        game.getPlayers().get(0).setCardInHand(0, new Deck.Card("F", 10));
-        game.getPlayers().get(0).setCardInHand(1, new Deck.Card("F", 10));
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 5));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 25));
+        testHand.add(new Deck.Card("F", 35));
+        testHand.add(new Deck.Card("D", 5));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("B", 15));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.getPlayers().get(0).setHand(testHand);
+
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
-        Scanner scanner = new Scanner(input);
         game.promptPlayer(scanner, printWriter);
 
         printWriter.flush();
@@ -448,15 +464,33 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "no\nyes\n";
+        String input = "no\nyes\n1\n6\nquit\n1\n6\n1\nquit\nyes\nyes\n1\n1\n1\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
-        //rig P2 hand so that they are eligible
-        game.getPlayers().get(1).setCardInHand(0, new Deck.Card("F", 10));
-        game.getPlayers().get(1).setCardInHand(1, new Deck.Card("F", 10));
+        // make p1 eligible but p1 declines sponsorship
+        game.getPlayers().get(0).setCardInHand(0, new Deck.Card("F", 10));
+        game.getPlayers().get(0).setCardInHand(0, new Deck.Card("F", 10));
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        //rig P2 hand so that they are eligible
+        ArrayList<Deck.Card> testHand = new ArrayList<>();
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 10));
+        testHand.add(new Deck.Card("F", 15));
+        testHand.add(new Deck.Card("F", 15));
+        testHand.add(new Deck.Card("F", 20));
+        testHand.add(new Deck.Card("F", 25));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("S", 10));
+        testHand.add(new Deck.Card("B", 15));
+        testHand.add(new Deck.Card("B", 15));
+        testHand.add(new Deck.Card("L", 20));
+        testHand.add(new Deck.Card("L", 20));
+
+        game.getPlayers().get(1).setHand(testHand);
+
+        game.overwriteQuestEventDeckCard(0,"Q",2);
+        game.overwriteEventDeckCard(1,"NULL","");
 
         game.gameStart(printWriter);
 
@@ -478,7 +512,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "no\nyes\n";
+        String input = "yes\n1\n6\nquit\n1\n6\nquit\nyes\nyes\n1\n1\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
@@ -488,7 +522,23 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        ArrayList<Deck.Card> p2Hand = new ArrayList<>();
+        p2Hand.add(new Deck.Card("F", 5));
+        p2Hand.add(new Deck.Card("F", 10));
+        p2Hand.add(new Deck.Card("F", 15));
+        p2Hand.add(new Deck.Card("D", 5));
+        p2Hand.add(new Deck.Card("D", 5));
+        p2Hand.add(new Deck.Card("D", 5));
+        p2Hand.add(new Deck.Card("H", 10));
+        p2Hand.add(new Deck.Card("S", 10));
+        p2Hand.add(new Deck.Card("S", 10));
+        p2Hand.add(new Deck.Card("S", 10));
+        p2Hand.add(new Deck.Card("L", 20));
+        p2Hand.add(new Deck.Card("E", 30));
+
+        game.getPlayers().get(1).setHand(p2Hand);
+
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -510,7 +560,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "yes\n1\n6\nQuit\n1\n6\nquit";
+        String input = "yes\n1\n6\nQuit\n1\n6\nquit\nyes\nyes\nyes\n1\n1\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
@@ -531,7 +581,7 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -557,7 +607,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "no\nyes\n1\n6\nQuit\n1\n6\nquit";
+        String input = "no\nyes\n1\n6\nQuit\n1\n6\nquit\nyes\nyes\nyes\n1\n1\n\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
@@ -578,7 +628,7 @@ class MainTest {
 
         game.getPlayers().get(1).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -605,7 +655,7 @@ class MainTest {
         game.distributeCards();
 
         // test entering two foes and repeating the same weapon
-        String input = "yes\n13\n1\n1\n6\n5\nQuit\n1\n6\nquit";
+        String input = "yes\n13\n1\n1\n6\n5\nQuit\n1\n6\nquit\nyes\nyes\nyes\n1\n1\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
@@ -626,7 +676,7 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -652,7 +702,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "yes\nQuit\nquit\n1\n6\nQuit\n1\n6\nquit\n";
+        String input = "yes\nQuit\nquit\n1\n6\nQuit\n1\n6\nquit\nyes\nyes\nyes\n1\n1\n";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
         Scanner scanner = new Scanner(inputStream);
 
@@ -676,7 +726,7 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -699,7 +749,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "yes\n1\n9\nQuit\n1\n6\nquit\n6\nquit\n";
+        String input = "yes\n1\n9\nQuit\n1\n6\nquit\n6\nquit\nyes\nyes\nyes\n1\n1\n";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
         Scanner scanner = new Scanner(inputStream);
 
@@ -723,7 +773,7 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -746,7 +796,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "yes\n1\n6\nQuit\n1\n6\nquit\nno\nno\n1\n\n1\n\n";
+        String input = "yes\n1\n6\nQuit\n1\n6\nquit\nno\nno\n1\n1\n12\nquit\n12\nquit\nyes\nyes\n1\n1\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 
@@ -772,7 +822,7 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -825,7 +875,7 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -881,7 +931,7 @@ class MainTest {
 
         game.getPlayers().get(0).setHand(testHand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -957,7 +1007,7 @@ class MainTest {
 
         game.getPlayers().get(3).setHand(p4badhand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -1034,7 +1084,7 @@ class MainTest {
 
         game.getPlayers().get(3).setHand(p4badhand);
 
-        game.overwriteEventDeckCard(0,"Q2","");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 
@@ -1111,7 +1161,7 @@ class MainTest {
 
         game.getPlayers().get(3).setHand(p4badhand);
 
-        game.overwriteEventDeckCard(0, "Q2", "");
+        game.overwriteQuestEventDeckCard(0,"Q",2);
 
         game.gameStart(printWriter);
 

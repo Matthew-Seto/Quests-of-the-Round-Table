@@ -14,6 +14,7 @@ public class Game {
     private Deck.Card currentEventCard;
     private final ArrayList<Player> ineligiblePlayers;
     private int cardsUsedInQuest;
+    private boolean winnerCheck;
 
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
@@ -40,19 +41,24 @@ public class Game {
     }
 
     public void promptPlayer(Scanner input, PrintWriter output) {
+        if (Objects.equals(currentEventCard.description, "Prosperity: All players immediately draw 2 adventure cards.")){
+            drawAdventureCardsForAllPlayers( 2);
+            for (Player player : getPlayers()) {
+                trimIfNeeded(player,input,output);
+                flushDisplay(output);
+            }
+        }
         trimIfNeeded(getCurrentPlayer(),input, output);
 
         if (QcardDrawn) {
             handleQuestSponsorship(input, output);
         } else {
-            output.print("Make your move (to end turn hit <return>): ");
+            output.print("Hit <return> to end turn: ");
             output.flush();
 
             String inputStr = input.nextLine();
             if (inputStr.isEmpty()) {
                 endCurrentPlayerTurn(output);
-            } else {
-                // handle additional moves here
             }
         }
 
@@ -100,6 +106,7 @@ public class Game {
             if (wantsToSponsor) {
                 anyPlayerSponsors = true;
                 output.println(player.getName() + " has chosen to sponsor the quest.");
+                flushDisplay(output);
                 QcardDrawn = false;
                 sponsorSetsUpQuestStages(player, input, output, numberOfStages);
                 break;
@@ -127,8 +134,6 @@ public class Game {
         output.flush();
 
         String response = input.nextLine().trim().toLowerCase();
-        // remove the sponsor from the eligible players
-        ineligiblePlayers.add(player);
         return response.equals("yes");
     }
 
@@ -155,6 +160,7 @@ public class Game {
                         stages.add(currentStage);
                         previousStageValue = currentStageValue;
                         output.println("Stage " + stage + " set with cards: " + currentStage);
+                        flushDisplay(output);
                         break;
                     }
                 } else {
@@ -201,10 +207,15 @@ public class Game {
     }
 
     private void setUpQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output, Player sponsor) {
-        for (Player player : getPlayers()){
-            if (player.countFoeCards() < stages.size()) {
-                output.println(player.getName() + " does not have enough 'Foe' cards to participate in the quest.");
-                ineligiblePlayers.add(player);
+        ineligiblePlayers.clear();
+        ineligiblePlayers.add(sponsor);
+
+        for (Player player : getPlayers()) {
+            if (!player.equals(sponsor)) {
+                if (player.countFoeCards() < stages.size()) {
+                    output.println(player.getName() + " does not have enough 'Foe' cards to participate in the quest.");
+                    ineligiblePlayers.add(player);
+                }
             }
         }
 
@@ -226,10 +237,11 @@ public class Game {
                     ineligiblePlayers.add(participant);
                 }
             }
-
+            flushDisplay(output);
             for (Player participant : participantsForStage) {
                 drawAdventureCardsForPlayer(participant, 1);
                 trimIfNeeded(participant, input, output);
+                flushDisplay(output);
             }
 
             if (participantsForStage.isEmpty()) {
@@ -240,6 +252,7 @@ public class Game {
 
             for (Player participant : participantsForStage) {
                 participant.setupAttack(input, output);
+                flushDisplay(output);
             }
 
             ArrayList<Player> newEligibleParticipants = new ArrayList<>();
@@ -256,6 +269,7 @@ public class Game {
 
         handleEndOfQuest(stages,input,output,sponsor);
         ineligiblePlayers.clear();
+        eligibleParticipants.clear();
     }
 
     public boolean resolveAttack(Player participant, ArrayList<Deck.Card> stage, ArrayList<ArrayList<Deck.Card>> stages, PrintWriter output) {
@@ -294,7 +308,7 @@ public class Game {
         drawAdventureCardsForPlayer(sponsor, numberOfCardsToDraw);
 
         trimIfNeeded(sponsor, input, output);
-
+        ineligiblePlayers.clear();
         cardsUsedInQuest = 0;
     }
 
@@ -306,6 +320,8 @@ public class Game {
         if (!winners.isEmpty()) {
             for (Player winner : winners) {
                 output.println("Player " + winner.getName() + " has won the game!");
+                output.flush();
+                winnerCheck = true;
             }
         } else {
             nextTurn(output);
@@ -323,7 +339,7 @@ public class Game {
     }
 
     public void flushDisplay(PrintWriter output) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10; i++) {
             output.println();
         }
         output.flush();
@@ -344,6 +360,11 @@ public class Game {
 
     public void overwriteEventDeckCard(int index, String type, String description){
         Deck.Card e = new Deck.Card(type, description);
+        eventDeck.setEventCard(index,e);
+    }
+
+    public void overwriteQuestEventDeckCard(int index, String type, int value){
+        Deck.Card e = new Deck.Card(type, value);
         eventDeck.setEventCard(index,e);
     }
 
@@ -407,6 +428,10 @@ public class Game {
     }
 
     private int getNumberOfStagesFromQuest(Deck.Card questCard) {
-        return Integer.parseInt(questCard.type.substring(1));
+        return questCard.value;
+    }
+
+    public boolean getWinner(){
+        return winnerCheck;
     }
 }
