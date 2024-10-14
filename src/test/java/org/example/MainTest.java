@@ -192,6 +192,7 @@ class MainTest {
         }
 
         game.overwriteEventDeckCard(0, "E", "Prosperity: All players immediately draw 2 adventure cards.");
+        game.overwriteEventDeckCard(1, "NULL", "");
 
         game.gameStart(printWriter);
         System.out.println(output.toString());
@@ -796,7 +797,7 @@ class MainTest {
         Game game = new Game(4);
         game.distributeCards();
 
-        String input = "yes\n1\n6\nQuit\n1\n6\nquit\nno\nno\n1\n1\n12\nquit\n12\nquit\nyes\nyes\n1\n1\n";
+        String input = "yes\n1\n6\nQuit\n1\n6\nquit\nno\n1\nno\n1\n12\nquit\n12\nquit\nyes\nyes\n1\n1\n";
         StringWriter output = new StringWriter();
         PrintWriter printWriter = new PrintWriter(output);
 

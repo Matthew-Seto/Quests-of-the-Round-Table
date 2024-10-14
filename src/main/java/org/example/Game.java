@@ -232,16 +232,13 @@ public class Game {
                 String response = input.nextLine().trim().toLowerCase();
                 if (response.equals("no")) {
                     participantsForStage.add(participant);
+                    drawAdventureCardsForPlayer(participant, 1);
+                    trimIfNeeded(participant, input, output);
+                    flushDisplay(output);
                 } else {
                     output.println(participant.getName() + " has withdrawn from the quest.");
                     ineligiblePlayers.add(participant);
                 }
-            }
-            flushDisplay(output);
-            for (Player participant : participantsForStage) {
-                drawAdventureCardsForPlayer(participant, 1);
-                trimIfNeeded(participant, input, output);
-                flushDisplay(output);
             }
 
             if (participantsForStage.isEmpty()) {
@@ -366,6 +363,11 @@ public class Game {
     public void overwriteQuestEventDeckCard(int index, String type, int value){
         Deck.Card e = new Deck.Card(type, value);
         eventDeck.setEventCard(index,e);
+    }
+
+    public void overwriteAdventureDeckCard(int index, String type, int value){
+        Deck.Card a = new Deck.Card(type, value);
+        advDeck.setAdventureCard(index,a);
     }
 
     private void drawEventCard(Player player, PrintWriter output) {

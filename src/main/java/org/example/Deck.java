@@ -93,6 +93,10 @@ public class Deck {
         eventDeck.set(index,c);
     }
 
+    public void setAdventureCard(int index, Card c){
+        adventureDeck.set(index,c);
+    }
+
     public int getAdventureDeckSize() {
         return adventureDeck.size();
     }
