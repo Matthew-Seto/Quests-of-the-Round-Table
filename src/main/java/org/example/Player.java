@@ -11,6 +11,7 @@ public class Player {
     private ArrayList<Deck.Card> hand = new ArrayList<>();
     private int shields;
     private final Game game;
+    private ArrayList<Deck.Card> attack;
 
     public Player(String name, Game game) {
         this.name = name;
@@ -144,9 +145,14 @@ public class Player {
                 }
             }
         }
+        this.attack = attack;
     }
 
     private boolean isValidCardForAttack(Deck.Card card, ArrayList<Deck.Card> currentAttack, PrintWriter output) {
+        if (card.type.equals("F")) {
+            output.println("Foes cannot be used in a attack");
+            return false;
+        }
         if (weaponCards(card.type) && currentAttack.stream().anyMatch(c -> c.type.equals(card.type))) {
             output.println("The same weapon cannot be selected twice in one attack.");
             return false;
@@ -157,5 +163,13 @@ public class Player {
     private boolean weaponCards(String cardType) {
         return cardType.equals("D") || cardType.equals("H") || cardType.equals("S") ||
                 cardType.equals("B") || cardType.equals("L") || cardType.equals("E");
+    }
+
+    public ArrayList<Deck.Card> getAttack() {
+        return attack;
+    }
+
+    public int calculateAttackValue() {
+        return 0;
     }
 }

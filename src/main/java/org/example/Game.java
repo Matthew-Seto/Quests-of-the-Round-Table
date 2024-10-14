@@ -229,7 +229,6 @@ public class Game {
 
             for (Player participant : participantsForStage) {
                 drawAdventureCardsForPlayer(participant, 1);
-                participant.displayHand(output);
                 trimIfNeeded(participant, input, output);
             }
 
@@ -243,11 +242,28 @@ public class Game {
                 participant.setupAttack(input, output);
             }
 
+            ArrayList<Player> newEligibleParticipants = new ArrayList<>();
+            for (Player participant : participantsForStage) {
+                if (resolveAttack(participant, stages.get(stage - 1), stages, output)) {
+                    newEligibleParticipants.add(participant);
+                } else {
+                    ineligiblePlayers.add(participant);
+                }
+            }
 
+            eligibleParticipants = newEligibleParticipants;
         }
 
         handleEndOfQuest(stages,input,output,sponsor);
         ineligiblePlayers.clear();
+    }
+
+    public boolean resolveAttack(Player participant, ArrayList<Deck.Card> stage, ArrayList<ArrayList<Deck.Card>> stages, PrintWriter output) {
+        return false;
+    }
+
+    private int calculateStageValue(ArrayList<Deck.Card> stage) {
+        return 0;
     }
 
     public void handleEndOfQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output, Player sponsor){
