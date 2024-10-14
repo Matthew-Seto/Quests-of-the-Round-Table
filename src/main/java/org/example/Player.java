@@ -170,6 +170,10 @@ public class Player {
     }
 
     public int calculateAttackValue() {
-        return 0;
+        int attackValue = 0;
+        for (Deck.Card c : getAttack()){
+            attackValue += c.value;
+        }
+        return attackValue;
     }
 }

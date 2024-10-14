@@ -259,11 +259,32 @@ public class Game {
     }
 
     public boolean resolveAttack(Player participant, ArrayList<Deck.Card> stage, ArrayList<ArrayList<Deck.Card>> stages, PrintWriter output) {
-        return false;
+        int attackValue = participant.calculateAttackValue();
+        int stageValue = calculateStageValue(stage);
+
+        output.println(participant.getName() + "'s attack value: " + attackValue);
+        output.println("Stage value: " + stageValue);
+
+        if (attackValue >= stageValue) {
+            output.println(participant.getName() + " passes the stage.");
+            if (stage == stages.get(stages.size() - 1)) {
+                int shieldsEarned = stages.size();
+                participant.addShields(shieldsEarned);
+                output.println(participant.getName() + " wins the quest and earns " + shieldsEarned + " shields.");
+            }
+            return true;
+        } else {
+            output.println(participant.getName() + " fails the stage and is ineligible for the next stage.");
+            return false;
+        }
     }
 
     private int calculateStageValue(ArrayList<Deck.Card> stage) {
-        return 0;
+        int value = 0;
+        for (Deck.Card card : stage) {
+            value += card.value;
+        }
+        return value;
     }
 
     public void handleEndOfQuest(ArrayList<ArrayList<Deck.Card>> stages, Scanner input, PrintWriter output, Player sponsor){
