@@ -1180,4 +1180,162 @@ class MainTest {
         assertEquals(6, game.getPlayers().get(2).getHandSize());
         assertEquals(2, game.getPlayers().get(2).getShields());
     }
+
+    @Test
+    @DisplayName("A-TEST JP-Scenario")
+    void A_TEST_JP_SCENARIO(){
+        // Start game, decks are created, hands of the 4 players are set up with random cards
+        Game game = new Game(4);
+        game.distributeCards();
+
+        // p1 initial hand
+        ArrayList<Deck.Card> p1hand = new ArrayList<>();
+        p1hand.add(new Deck.Card("F", 5));
+        p1hand.add(new Deck.Card("F", 5));
+        p1hand.add(new Deck.Card("F", 15));
+        p1hand.add(new Deck.Card("F", 15));
+        p1hand.add(new Deck.Card("D", 5));
+        p1hand.add(new Deck.Card("S", 10));
+        p1hand.add(new Deck.Card("S", 10));
+        p1hand.add(new Deck.Card("H", 10));
+        p1hand.add(new Deck.Card("H", 10));
+        p1hand.add(new Deck.Card("B", 15));
+        p1hand.add(new Deck.Card("B", 15));
+        p1hand.add(new Deck.Card("L", 20));
+        game.getPlayers().get(0).setHand(p1hand);
+
+        // p2 initial hand
+        ArrayList<Deck.Card> p2hand = new ArrayList<>();
+        p2hand.add(new Deck.Card("F", 5));
+        p2hand.add(new Deck.Card("F", 5));
+        p2hand.add(new Deck.Card("F", 15));
+        p2hand.add(new Deck.Card("F", 15));
+        p2hand.add(new Deck.Card("F", 40));
+        p2hand.add(new Deck.Card("D", 5));
+        p2hand.add(new Deck.Card("S", 10));
+        p2hand.add(new Deck.Card("H", 10));
+        p2hand.add(new Deck.Card("H", 10));
+        p2hand.add(new Deck.Card("B", 15));
+        p2hand.add(new Deck.Card("B", 15));
+        p2hand.add(new Deck.Card("E", 30));
+        game.getPlayers().get(1).setHand(p2hand);
+
+        // p3 initial hand
+        ArrayList<Deck.Card> p3hand = new ArrayList<>();
+        p3hand.add(new Deck.Card("F", 5));
+        p3hand.add(new Deck.Card("F", 5));
+        p3hand.add(new Deck.Card("F", 5));
+        p3hand.add(new Deck.Card("F", 15));
+        p3hand.add(new Deck.Card("D", 5));
+        p3hand.add(new Deck.Card("S", 10));
+        p3hand.add(new Deck.Card("S", 10));
+        p3hand.add(new Deck.Card("S", 10));
+        p3hand.add(new Deck.Card("H", 10));
+        p3hand.add(new Deck.Card("H", 10));
+        p3hand.add(new Deck.Card("B", 15));
+        p3hand.add(new Deck.Card("L", 20));
+        game.getPlayers().get(2).setHand(p3hand);
+
+        // p4 initial hand
+        ArrayList<Deck.Card> p4hand = new ArrayList<>();
+        p4hand.add(new Deck.Card("F", 5));
+        p4hand.add(new Deck.Card("F", 15));
+        p4hand.add(new Deck.Card("F", 15));
+        p4hand.add(new Deck.Card("F", 40));
+        p4hand.add(new Deck.Card("D", 5));
+        p4hand.add(new Deck.Card("D", 5));
+        p4hand.add(new Deck.Card("S", 10));
+        p4hand.add(new Deck.Card("H", 10));
+        p4hand.add(new Deck.Card("H", 10));
+        p4hand.add(new Deck.Card("B", 15));
+        p4hand.add(new Deck.Card("L", 20));
+        p4hand.add(new Deck.Card("E", 30));
+        game.getPlayers().get(3).setHand(p4hand);
+
+        // draw quest of 4
+        game.overwriteQuestEventDeckCard(0,"Q",4);
+
+        // make sure game doesn't draw another card that may affect outcome
+        game.overwriteEventDeckCard(1, "NULL", "");
+
+        // rig adventure deck cards
+        // Stage 1:
+        game.overwriteAdventureDeckCard(0, "F", 30);
+        game.overwriteAdventureDeckCard(1, "S", 10);
+        game.overwriteAdventureDeckCard(2, "B", 15);
+
+        // Stage 2:
+        game.overwriteAdventureDeckCard(3,"F", 10);
+        game.overwriteAdventureDeckCard(4,"L", 20);
+        game.overwriteAdventureDeckCard(5,"L", 20);
+
+        // Stage 3:
+        game.overwriteAdventureDeckCard(6,"B", 15);
+        game.overwriteAdventureDeckCard(7,"S", 10);
+
+        // Stage 4:
+        game.overwriteAdventureDeckCard(8,"F", 30);
+        game.overwriteAdventureDeckCard(9,"L", 20);
+
+        String input = "no\nyes\n1\n7\nquit\n2\n6\nquit\n2\n3\n4\nquit\n2\n3\nquit\n" + // p2 sponsors and builds stages
+                       "no\n1\n" + // p1 decides to participate and trims F5
+                       "no\n1\n" + // p3 decides to participate and trims F5
+                       "no\n1\n" + // p4 decides to participate and trims F5
+                       "5\n7\nquit\n" + // p1 builds attack
+                       "7\n4\nquit\n" + // p3 builds attack
+                       "4\n5\nquit\n" + // p4 builds attack
+                       "no\n" + // p1 decides to participate
+                       "no\n" + // p3 decides to participate
+                       "no\n" + // p4 decides to participate
+                       "6\n7\nquit\n" + // p1 builds attack
+                       "9\n6\nquit\n" + // p3 builds attack
+                       "5\n6\nquit\n" + // p4 builds attack
+                       "no\n" + // p3 decides to participate
+                       "no\n" + // p4 decides to participate
+                       "9\n4\n6\nquit\n" + // p3 builds attack
+                       "7\n5\n6\nquit\n" + // p4 builds attack
+                       "no\n" + // p3 decides to participate
+                       "no\n" + // p4 decides to participate
+                       "7\n5\n6\nquit\n" + // p3 builds attack
+                       "4\n4\n4\n5\nquit\n" + // p4 builds attack
+                       "1\n1\n1\n1\n"; // p2 discards 4 cards
+
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        Scanner scanner = new Scanner(inputStream);
+
+        StringWriter output = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(output);
+
+        game.gameStart(printWriter);
+
+        game.promptPlayer(scanner, printWriter);
+
+        printWriter.flush();
+
+        // display hands of players to make sure they have the correct cards for after the scenario
+        game.getPlayers().get(0).displayHand(printWriter);
+        game.getPlayers().get(2).displayHand(printWriter);
+        game.getPlayers().get(3).displayHand(printWriter);
+
+        String outputContent = output.toString();
+        System.out.println(outputContent);
+
+        // 13 random cards are drawn
+        assertTrue(outputContent.contains("P2 has drawn 13 new cards."));
+
+        // p1 has no shields
+        assertEquals(0, game.getPlayers().get(0).getShields());
+        assertTrue(outputContent.contains("F5 F10 F15 F15 F30 H10 B15 B15 L20"));
+
+        // p2 has 12 cards
+        assertEquals(12, game.getPlayers().get(1).getHandSize());
+
+        // p3 has no shields
+        assertEquals(0, game.getPlayers().get(2).getShields());
+        assertTrue(outputContent.contains("F5 F5 F15 F30 S10"));
+
+        // p4 has 4 shields
+        assertEquals(4, game.getPlayers().get(3).getShields());
+        assertTrue(outputContent.contains("F15 F15 F40 L20"));
+    }
 }
