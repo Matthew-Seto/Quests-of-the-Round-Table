@@ -59,6 +59,12 @@ public class Player {
         game.getAdventureDeck().adventureDeck.add(hand.remove(index));
     }
 
+    public Deck.Card playReturnAdventureCard(int index){
+        Deck.Card c = hand.remove(index);
+        game.getAdventureDeck().adventureDeck.add(c);
+        return c;
+    }
+
     public void loseShields(int amount) {
         shields -= amount;
         if (shields < 0) shields = 0;
@@ -145,6 +151,18 @@ public class Player {
         this.attack = attack;
     }
 
+    public void setAttack(ArrayList <Deck.Card> attack){
+        this.attack = attack;
+    }
+
+    public void displayHandCucumber(){
+        System.out.println(this.getName() + "'s hand:");
+        for (Deck.Card card : this.getHand()) {
+            System.out.print(card + " ");
+        }
+        System.out.println();
+    }
+
     private boolean isValidCardForAttack(Deck.Card card, ArrayList<Deck.Card> currentAttack, PrintWriter output) {
         if (card.type.equals("F")) {
             output.println("Foes cannot be used in a attack");
@@ -172,5 +190,15 @@ public class Player {
             attackValue += c.value;
         }
         return attackValue;
+    }
+
+    public int getIndexByCardTypeAndValue(String type, int value){
+        for (int i = 0; i < hand.size(); i++) {
+            Deck.Card card = hand.get(i);
+            if (card.type.equals(type) && card.value == value) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

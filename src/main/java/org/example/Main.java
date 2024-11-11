@@ -1,7 +1,6 @@
 package org.example;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Scanner;
 
 public class Main {

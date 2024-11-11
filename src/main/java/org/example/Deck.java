@@ -97,6 +97,9 @@ public class Deck {
         adventureDeck.set(index,c);
     }
 
+    public Card peekAtFirstECard(){
+        return eventDeck.getFirst();
+    }
     public int getAdventureDeckSize() {
         return adventureDeck.size();
     }

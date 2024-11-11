@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -11,10 +12,13 @@ public class Game {
     private final ArrayList<Player> players;
     private int currentPlayerIndex;
     private boolean QcardDrawn;
-    private Deck.Card currentEventCard;
+    public Deck.Card currentEventCard;
     private final ArrayList<Player> ineligiblePlayers;
-    private int cardsUsedInQuest;
+    public int cardsUsedInQuest;
     private boolean winnerCheck;
+    private Player sponsor;
+    public ArrayList<ArrayList<Deck.Card>> stages;
+    public ArrayList<Player> eligiblePlayers;
 
     public Game(int numberOfPlayers) {
         this.players = new ArrayList<>();
@@ -28,6 +32,8 @@ public class Game {
         this.currentPlayerIndex = 0;
         this.currentEventCard = new Deck.Card("Null", 0);
         this.ineligiblePlayers = new ArrayList<>();
+        this.stages = new ArrayList<>();
+        this.eligiblePlayers = new ArrayList<>();
     }
 
     public void distributeCards() {
@@ -121,6 +127,40 @@ public class Game {
             output.println("No players sponsored the quest. The quest has ended.");
         }
         endCurrentPlayerTurn(output);
+    }
+
+    public void playerDecideToSponsor(int index, boolean wantsToSponsor) {
+        int numberOfStages = getNumberOfStagesFromQuest(currentEventCard);
+        Player player = players.get(index);
+
+        // Check if the player has enough 'Foe' cards for the sponsorship
+        if (player.countFoeCards() < numberOfStages) {
+            System.out.println(player.getName() + " does not have enough 'Foe' cards to sponsor the quest.");
+            ineligiblePlayers.add(player);
+            return; // Player cannot sponsor, return early
+        }
+
+        // Call the appropriate method based on the decision (wantsToSponsor)
+        if (wantsToSponsor) {
+            acceptSponsorship(player);
+        } else {
+            declineSponsorship(player);
+        }
+    }
+
+    public void acceptSponsorship(Player player) {
+        System.out.println(player.getName() + " has chosen to sponsor the quest.");
+        sponsor = player;
+        QcardDrawn = false;
+    }
+
+    public void declineSponsorship(Player player) {
+        System.out.println(player.getName() + " declines to sponsor the quest.");
+        ineligiblePlayers.add(player);
+    }
+
+    public boolean isPlayerTheSponsor(Player player){
+        return player == sponsor;
     }
 
     private boolean promptForSponsorship(Player player, Scanner input, PrintWriter output, int numberOfStages) {
@@ -290,7 +330,7 @@ public class Game {
         }
     }
 
-    private int calculateStageValue(ArrayList<Deck.Card> stage) {
+    public int calculateStageValue(ArrayList<Deck.Card> stage) {
         int value = 0;
         for (Deck.Card card : stage) {
             value += card.value;
@@ -325,7 +365,7 @@ public class Game {
         }
     }
 
-    private ArrayList<Player> checkForWinners() {
+    public ArrayList<Player> checkForWinners() {
         ArrayList<Player> winners = new ArrayList<>();
         for (Player player : players) {
             if (player.getShields() >= 7) {
@@ -383,6 +423,19 @@ public class Game {
         }
     }
 
+    public void drawEventCard(Player player) {
+        if (eventDeck.getEventDeckSize() > 0) {
+            Deck.Card drawnCard = eventDeck.eventDeck.removeFirst();
+            System.out.println(player.getName() + " drew an event card: " + drawnCard);
+            player.receiveEventCard(drawnCard);
+
+            currentEventCard = drawnCard;
+            returnEventCardToBottom(drawnCard);
+        } else {
+            System.out.println("No more event cards to draw.");
+        }
+    }
+
     public Deck.Card drawAdventureCard() {
         if (advDeck.getAdventureDeckSize() > 0) {
             return advDeck.adventureDeck.removeFirst();
@@ -436,4 +489,9 @@ public class Game {
     public boolean getWinner(){
         return winnerCheck;
     }
+
+    public Player getSponsor() {
+        return sponsor;
+    }
+
 }
