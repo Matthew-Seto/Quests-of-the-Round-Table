@@ -158,6 +158,23 @@ public class GreetingController implements InitializingBean {
                     game1.overwriteAdventureDeckCard(8, "F", 30);
                     game1.overwriteAdventureDeckCard(9, "L", 20);
 
+                    // full up p2 hand with f5
+                    game1.overwriteAdventureDeckCard(10, "F", 5);
+                    game1.overwriteAdventureDeckCard(11, "F", 5);
+                    game1.overwriteAdventureDeckCard(12, "F", 5);
+                    game1.overwriteAdventureDeckCard(13, "F", 5);
+                    game1.overwriteAdventureDeckCard(14, "F", 5);
+                    game1.overwriteAdventureDeckCard(15, "F", 5);
+                    game1.overwriteAdventureDeckCard(16, "F", 5);
+                    game1.overwriteAdventureDeckCard(17, "F", 5);
+                    game1.overwriteAdventureDeckCard(18, "F", 5);
+                    game1.overwriteAdventureDeckCard(19, "F", 5);
+                    game1.overwriteAdventureDeckCard(20, "F", 5);
+                    game1.overwriteAdventureDeckCard(21, "F", 5);
+                    game1.overwriteAdventureDeckCard(22, "F", 5);
+                    game1.overwriteAdventureDeckCard(23, "F", 5);
+                    game1.overwriteAdventureDeckCard(24, "F", 5);
+
                     game1.gameStart();
 
                     game1.promptPlayer();
