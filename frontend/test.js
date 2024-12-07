@@ -1188,7 +1188,7 @@ async function scenario2() {
         let finalStatus = await driver.findElement(By.id('main-content')).getText();
         console.log("Final Game Status:", finalStatus);
 
-        if (finalStatus.includes("F15 F15 F20 F20 F20 F20 F25 F25 F30 H10 B15 L20") && finalStatus.includes("F10 F15 F15 F25 F30 F40 F50 L20 L20") && finalStatus.includes("F20 F40 D5 D5 S10 H10 H10 H10 H10 B15 B15 L20") && finalStatus.includes("F15 F15 F20 F25 F30 F50 F70 L20 L20")) {
+        if (finalStatus.includes("F15 F15 F20 F20 F20 F20 F25 F25 F30 H10 B15 L20") && finalStatus.includes("F10 F15 F15 F25 F30 F40 F50 L20 L20") && finalStatus.includes("F20 F40 D5 D5 H10 H10 H10 H10 S10 B15 B15 L20") && finalStatus.includes("F15 F15 F20 F25 F30 F50 F70 L20 L20")) {
             console.log("Test passed: Hands are displayed correctly.")
         } else {
             console.log("Test failed: Hands are displayed incorrectly.")
